@@ -36,12 +36,22 @@ const { Title, Text } = Typography;
 
 type TabKey = 'merchant' | 'cek-username' | 'transaction' | 'status' | 'queue';
 
-// ✅ ADD THIS TYPE DEFINITION
+// Type definition for Merchant data
 type MerchantData = {
   balance?: number;
   merchant_name?: string;
   merchant?: string;
   status?: string;
+  [key: string]: unknown;
+};
+
+// Type for transaction result
+type TxResultData = {
+  status?: string;
+  sn?: string;
+  message?: string;
+  price?: number;
+  ref_id?: string;
   [key: string]: unknown;
 };
 
@@ -103,7 +113,7 @@ export default function AdminApigamesPage() {
   const [txVoucherCode, setTxVoucherCode] = useState('');
   const [txUserId,      setTxUserId]      = useState('');
   const [txServerId,    setTxServerId]    = useState('');
-  const [txResult,      setTxResult]      = useState<Record<string, unknown> | null>(null);
+  const [txResult,      setTxResult]      = useState<TxResultData | null>(null);
   const [txLoading,     setTxLoading]     = useState(false);
 
   /* Cek Status */
@@ -183,7 +193,7 @@ export default function AdminApigamesPage() {
         serverId:    txServerId || undefined,
       });
       const data = res.data.data ?? res.data;
-      setTxResult(data);
+      setTxResult(data as TxResultData);
       const s = String(data?.status || '').toLowerCase();
       if (s === 'success') toast.success('✅ Transaksi Sukses!');
       else if (s === 'pending') toast('⏳ Transaksi Pending', { icon: '⏳' });
@@ -276,7 +286,7 @@ export default function AdminApigamesPage() {
           </div>
         </div>
 
-        {/* Merchant balance badge - FIXED with proper type casting */}
+        {/* Merchant balance badge */}
         {merchantData && typeof merchantData === 'object' && (
           <motion.div whileHover={{ scale: 1.02 }}
             className="flex items-center gap-3 px-4 py-2.5 rounded-2xl cursor-pointer"
@@ -553,13 +563,13 @@ export default function AdminApigamesPage() {
                   <div className="flex items-center justify-between p-3 rounded-xl"
                     style={{ background: 'oklch(0.22 0.01 17.53)', border: '1px solid oklch(0.32 0.02 34.90)' }}>
                     <span style={{ color: 'oklch(0.95 0 0)', fontWeight: 700 }}>Status</span>
-                    <ApiStatusTag status={String(txResult?.status || 'pending')} />
+                    <ApiStatusTag status={String(txResult.status || 'pending')} />
                   </div>
-                  {txResult?.sn && (
+                  {txResult.sn && (
                     <div className="p-4 rounded-xl text-center"
                       style={{ background: 'oklch(0.30 0.05 130 / 0.15)', border: '1px solid oklch(0.55 0.10 130 / 0.3)' }}>
                       <div style={{ color: 'oklch(0.65 0 0)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', marginBottom: 4 }}>Serial Number</div>
-                      <div style={{ color: '#4ade80', fontFamily: 'monospace', fontWeight: 900, fontSize: 18 }}>{txResult.sn as string}</div>
+                      <div style={{ color: '#4ade80', fontFamily: 'monospace', fontWeight: 900, fontSize: 18 }}>{txResult.sn}</div>
                     </div>
                   )}
                   <JsonBlock data={txResult} />
