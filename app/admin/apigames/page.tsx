@@ -36,6 +36,15 @@ const { Title, Text } = Typography;
 
 type TabKey = 'merchant' | 'cek-username' | 'transaction' | 'status' | 'queue';
 
+// ✅ ADD THIS TYPE DEFINITION
+type MerchantData = {
+  balance?: number;
+  merchant_name?: string;
+  merchant?: string;
+  status?: string;
+  [key: string]: unknown;
+};
+
 // ─── Status tag ────────────────────────────────────────────────
 function ApiStatusTag({ status }: { status: string }) {
   const s = String(status).toLowerCase();
@@ -267,33 +276,36 @@ export default function AdminApigamesPage() {
           </div>
         </div>
 
-        {/* Merchant balance badge */}
-{merchantData && typeof merchantData === 'object' && (
-  <motion.div whileHover={{ scale: 1.02 }}
-    className="flex items-center gap-3 px-4 py-2.5 rounded-2xl cursor-pointer"
-    style={{ background: 'oklch(0.92 0.06 67.02 / 0.10)', border: '1px solid oklch(0.92 0.06 67.02 / 0.20)' }}
-    onClick={doFetchMerchant}>
-    <DollarOutlined style={{ color: '#f0c060', fontSize: 18 }} />
-    <div>
-      <div style={{ color: '#f0c060', fontWeight: 900, fontSize: 16, lineHeight: 1 }}>
-        {(() => {
-          const data = merchantData as MerchantData;
-          if (data?.balance !== undefined && typeof data.balance === 'number') {
-            return formatCurrency(data.balance);
-          }
-          if (data?.merchant_name && typeof data.merchant_name === 'string') {
-            return data.merchant_name;
-          }
-          return 'Apigames';
-        })()}
-      </div>
-      <div style={{ color: 'oklch(0.45 0.03 67.02)', fontSize: 11, fontWeight: 600 }}>
-        Merchant · klik refresh
-      </div>
-    </div>
-    <ReloadOutlined style={{ color: '#f0c060', fontSize: 14 }} className={merchantLoading ? 'animate-spin' : ''} />
-  </motion.div>
-)}
+        {/* Merchant balance badge - FIXED with proper type casting */}
+        {merchantData && typeof merchantData === 'object' && (
+          <motion.div whileHover={{ scale: 1.02 }}
+            className="flex items-center gap-3 px-4 py-2.5 rounded-2xl cursor-pointer"
+            style={{ background: 'oklch(0.92 0.06 67.02 / 0.10)', border: '1px solid oklch(0.92 0.06 67.02 / 0.20)' }}
+            onClick={doFetchMerchant}>
+            <DollarOutlined style={{ color: '#f0c060', fontSize: 18 }} />
+            <div>
+              <div style={{ color: '#f0c060', fontWeight: 900, fontSize: 16, lineHeight: 1 }}>
+                {(() => {
+                  const data = merchantData as MerchantData;
+                  if (data?.balance !== undefined && typeof data.balance === 'number') {
+                    return formatCurrency(data.balance);
+                  }
+                  if (data?.merchant_name && typeof data.merchant_name === 'string') {
+                    return data.merchant_name;
+                  }
+                  if (data?.merchant && typeof data.merchant === 'string') {
+                    return data.merchant;
+                  }
+                  return 'Apigames';
+                })()}
+              </div>
+              <div style={{ color: 'oklch(0.45 0.03 67.02)', fontSize: 11, fontWeight: 600 }}>
+                Merchant · klik refresh
+              </div>
+            </div>
+            <ReloadOutlined style={{ color: '#f0c060', fontSize: 14 }} className={merchantLoading ? 'animate-spin' : ''} />
+          </motion.div>
+        )}
       </div>
 
       {/* Tabs */}
