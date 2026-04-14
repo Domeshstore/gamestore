@@ -1,0 +1,30 @@
+/* app/status-colors.css */
+.status-badge[data-status="waiting_payment"] {
+  background: rgba(234, 216, 177, 0.15);
+  border-color: rgba(234, 216, 177, 0.3);
+  color: #EAD8B1;
+}
+
+.status-badge[data-status="paid"] {
+  background: rgba(58, 109, 140, 0.15);
+  border-color: rgba(58, 109, 140, 0.3);
+  color: #3A6D8C;
+}
+
+.status-badge[data-status="processing"] {
+  background: rgba(106, 154, 176, 0.15);
+  border-color: rgba(106, 154, 176, 0.3);
+  color: #6A9AB0;
+}
+
+.status-badge[data-status="success"] {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+.status-badge[data-status="failed"] {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
