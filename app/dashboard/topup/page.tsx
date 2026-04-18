@@ -9,15 +9,14 @@ import apiClient from '@/lib/api/client';
 import { Game, Voucher } from '@/types';
 import { useCheckoutStore } from '@/lib/store/useCheckoutStore';
 import { formatCurrency, getErrorMessage } from '@/lib/utils/format';
-import Image from 'next/image';
 import {
   Loader2, Search, CheckCircle, XCircle, ChevronRight,
-  Award, Calendar, Tag, Zap, Wifi, Phone, Battery,
-  Clock, Star, TrendingUp, Gift,
+  Award, Tag, Zap, Wifi, Phone, Battery,
+  Clock, Star, Gift,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// ── Operator data ─────────────────────────────────────────────
+// ── Operator data (hanya untuk referensi, tidak digunakan untuk cek nomor)
 const OPERATORS: { slug:string; name:string; emoji:string; color:string; bg:string; prefix:string[]; digiOperator:string }[] = [
   { slug:'telkomsel', name:'Telkomsel', emoji:'🔴', color:'#e4002b', bg:'#e4002b18', prefix:['0811','0812','0813','0821','0822','0823','0851','0852','0853'], digiOperator:'tsel' },
   { slug:'xl-axiata', name:'XL Axiata', emoji:'🔵', color:'#0072bc', bg:'#0072bc18', prefix:['0817','0818','0819','0859','0877','0878'], digiOperator:'xl' },
@@ -31,9 +30,9 @@ const OPERATORS: { slug:string; name:string; emoji:string; color:string; bg:stri
 type PageType = 'pulsa' | 'paket_data' | 'pln';
 
 const PAGE_CONFIG = {
-  pulsa:     { title:'Top Up Pulsa',     icon:'📱', desc:'Isi ulang pulsa semua operator', inputLabel:'Nomor HP', color:'#ea5234' },
-  paket_data:{ title:'Paket Internet',   icon:'📶', desc:'Paket data semua operator',      inputLabel:'Nomor HP', color:'#ea5234' },
-  pln:       { title:'Token Listrik PLN',icon:'⚡', desc:'Beli token listrik prabayar',    inputLabel:'Nomor Meter PLN', color:'#ea5234' },
+  pulsa:     { title:'Top Up Pulsa',     icon:'📱', desc:'Isi ulang pulsa semua operator', inputLabel:'Nomor HP', color:'#ea5234', showCheck: false },
+  paket_data:{ title:'Paket Internet',   icon:'📶', desc:'Paket data semua operator',      inputLabel:'Nomor HP', color:'#ea5234', showCheck: false },
+  pln:       { title:'Token Listrik PLN',icon:'⚡', desc:'Beli token listrik prabayar',    inputLabel:'Nomor Meter PLN', color:'#ea5234', showCheck: true },
 };
 
 const ss = { 
@@ -42,23 +41,18 @@ const ss = {
   borderRadius: 18 
 };
 
-// Enhanced Voucher Card without image (since Voucher type doesn't have image property)
+// Voucher Card Component
 function VoucherDetailCard({ v, selected, onSelect, pageType }: { v: Voucher; selected: boolean; onSelect(): void; pageType: PageType }) {
   const hasDisc = v.originalPrice > v.price;
   const pct     = hasDisc ? Math.round(((v.originalPrice - v.price) / v.originalPrice) * 100) : 0;
   
-  // Get icon based on voucher type and page type
   const getVoucherIcon = () => {
-    // Voucher type based icons
     if (v.type === 'subscription') return <Star className="w-5 h-5" />;
     if (v.type === 'diamond') return <Zap className="w-5 h-5" />;
     if (v.type === 'coin') return <Award className="w-5 h-5" />;
-    
-    // Page type based icons
     if (pageType === 'pulsa') return <Phone className="w-5 h-5" />;
     if (pageType === 'paket_data') return <Wifi className="w-5 h-5" />;
     if (pageType === 'pln') return <Battery className="w-5 h-5" />;
-    
     return <Gift className="w-5 h-5" />;
   };
 
@@ -73,7 +67,6 @@ function VoucherDetailCard({ v, selected, onSelect, pageType }: { v: Voucher; se
         boxShadow: selected ? '0 0 16px rgba(234, 82, 52, 0.15)' : 'none',
       }}>
       
-      {/* Icon */}
       <div className="flex-shrink-0">
         <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl"
           style={{ background: selected ? 'rgba(234, 82, 52, 0.20)' : '#2a2a2a' }}>
@@ -81,7 +74,6 @@ function VoucherDetailCard({ v, selected, onSelect, pageType }: { v: Voucher; se
         </div>
       </div>
 
-      {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
           <div>
@@ -96,7 +88,6 @@ function VoucherDetailCard({ v, selected, onSelect, pageType }: { v: Voucher; se
             )}
           </div>
           
-          {/* Price */}
           <div className="text-right shrink-0">
             <div style={{ color: selected ? '#ea5234' : '#ffffff', fontWeight: 900, fontSize: 16 }}>
               {formatCurrency(v.price)}
@@ -112,7 +103,6 @@ function VoucherDetailCard({ v, selected, onSelect, pageType }: { v: Voucher; se
           </div>
         </div>
 
-        {/* Additional info */}
         <div className="flex items-center gap-3 mt-2 flex-wrap">
           {v.rewardPoints > 0 && (
             <div className="flex items-center gap-1">
@@ -136,7 +126,6 @@ function VoucherDetailCard({ v, selected, onSelect, pageType }: { v: Voucher; se
         </div>
       </div>
 
-      {/* Selected indicator */}
       {selected && (
         <div className="flex-shrink-0">
           <CheckCircle className="w-5 h-5" style={{ color: '#ea5234' }} />
@@ -191,15 +180,6 @@ function TopupPageInner() {
         let all = response.data.data ?? [];
         
         if (pageType === 'pln' && all.length === 0) {
-          console.log('No PLN products found, trying streaming category...');
-          const streamingRes = await apiClient.get('/games', { 
-            params: { category: 'streaming', limit: 50 }
-          });
-          all = streamingRes.data.data ?? [];
-        }
-        
-        if (pageType === 'pln' && all.length === 0) {
-          console.log('No streaming products found, trying all products...');
           const allRes = await apiClient.get('/games', { params: { limit: 100 } });
           all = allRes.data.data ?? [];
           all = all.filter((g: Game) => 
@@ -285,7 +265,7 @@ function TopupPageInner() {
     fetchProductDetails();
   }, [selectedProduct]);
 
-  // Auto-detect operator from phone number
+  // Auto-detect operator from phone number (hanya untuk UI, tidak untuk cek nomor)
   useEffect(() => {
     if (pageType === 'pln') { setDetectedOp(null); return; }
     if (phone.length >= 4) {
@@ -302,44 +282,40 @@ function TopupPageInner() {
     }
   }, [phone, products, pageType, selectedProduct]);
 
-  // Cek nomor / meter
+  // Cek nomor / meter (HANYA UNTUK PLN)
   const handleCheck = useCallback(async () => {
-    if (pageType === 'pln') {
-      if (phone.length < 11) { toast.error('Nomor meter PLN minimal 11 digit'); return; }
-    } else {
-      if (phone.length < 10) { toast.error('Nomor HP minimal 10 digit'); return; }
+    // Hanya untuk PLN
+    if (pageType !== 'pln') {
+      toast.error('Cek nomor hanya tersedia untuk Token PLN');
+      return;
     }
-    setChecking(true); setCheckResult(null); setCheckError('');
+    
+    if (phone.length < 11) { 
+      toast.error('Nomor meter PLN minimal 11 digit'); 
+      return; 
+    }
+    
+    setChecking(true); 
+    setCheckResult(null); 
+    setCheckError('');
+    
     try {
-      if (pageType === 'pln') {
-        const res = await apiClient.get('/digiflazz/cek-pln', { params: { meter: phone } });
-        const d   = res.data.data;
-        setCheckResult({
-          name:   d?.customer_name || d?.name,
-          status: d?.status,
-          info:   `ID: ${d?.customer_no || phone} | Daya: ${d?.desc?.daya || '-'} VA`,
-        });
-        setTargetUsername(d?.customer_name || '');
-        toast.success(`Meter PLN: ${d?.customer_name || 'Ditemukan'}`);
-      } else {
-        const op = detectedOp?.digiOperator || 'tsel';
-        const res = await apiClient.get('/digiflazz/cek-nomor', { params: { operator: op, phone } });
-        const d   = res.data.data;
-        setCheckResult({
-          name:   d?.customer_name || d?.name || 'Nomor Valid',
-          status: d?.status,
-          info:   `Operator: ${detectedOp?.name || op}`,
-        });
-        setTargetUsername(d?.customer_name || '');
-        toast.success(`Nomor ${detectedOp?.name || ''}: ${d?.customer_name || 'Valid'}`);
-      }
+      const res = await apiClient.get('/digiflazz/cek-pln', { params: { meter: phone } });
+      const d   = res.data.data;
+      setCheckResult({
+        name:   d?.customer_name || d?.name,
+        status: d?.status,
+        info:   `ID: ${d?.customer_no || phone} | Daya: ${d?.desc?.daya || '-'} VA`,
+      });
+      setTargetUsername(d?.customer_name || '');
+      toast.success(`Meter PLN: ${d?.customer_name || 'Ditemukan'}`);
       setTargetId(phone);
     } catch (err) {
       setCheckError(getErrorMessage(err));
     } finally {
       setChecking(false);
     }
-  }, [phone, pageType, detectedOp]);
+  }, [phone, pageType]);
 
   const handleBuy = () => {
     if (!phone)          { toast.error(`Masukkan ${config.inputLabel}`); return; }
@@ -445,12 +421,24 @@ function TopupPageInner() {
                 </motion.div>
               )}
 
-              <button onClick={handleCheck} disabled={checking || phone.length < (pageType === 'pln' ? 11 : 10)}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50"
-                style={{ background: 'rgba(234, 82, 52, 0.2)', border: '1px solid rgba(234, 82, 52, 0.5)', color: '#ea5234' }}>
-                {checking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-                {pageType === 'pln' ? 'Cek Nomor Meter' : 'Cek Nomor'}
-              </button>
+              {/* Tombol Cek - HANYA UNTUK PLN */}
+              {pageType === 'pln' && (
+                <button onClick={handleCheck} disabled={checking || phone.length < 11}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50"
+                  style={{ background: 'rgba(234, 82, 52, 0.2)', border: '1px solid rgba(234, 82, 52, 0.5)', color: '#ea5234' }}>
+                  {checking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                  Cek Nomor Meter
+                </button>
+              )}
+
+              {/* Informasi untuk Pulsa/Paket Data bahwa cek nomor tidak tersedia */}
+              {pageType !== 'pln' && (
+                <div className="mt-2 text-center">
+                  <p className="text-xs" style={{ color: '#b4b4b4' }}>
+                    ⚡ Cek nomor tidak tersedia. Lanjutkan langsung ke pemilihan nominal.
+                  </p>
+                </div>
+              )}
 
               <AnimatePresence>
                 {checkResult && (
@@ -583,7 +571,6 @@ function TopupPageInner() {
           </div>
         </div>
 
-        {/* Custom scrollbar styles */}
         <style jsx>{`
           .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
