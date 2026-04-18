@@ -22,21 +22,11 @@ export interface Game {
   tags: string[]; vouchers?: Voucher[]; createdAt: string;
 }
 export interface Voucher {
-  _id: string; 
-  gameId: string|Game; 
-  name: string; 
-  code: string;
-  description: string; 
-  price: number; 
-  originalPrice: number;
-  rewardPoints: number; 
-  provider: 'digiflazz'|'apigames';
-  providerCode: string; 
-  type: string;
-  isActive: boolean; 
-  isFeatured: boolean; 
-  stock: number; 
-  sortOrder: number;
+  _id: string; gameId: string|Game; name: string; code: string;
+  description: string; price: number; originalPrice: number;
+  rewardPoints: number; provider: 'digiflazz'|'apigames';
+  providerCode: string; type: string;
+  isActive: boolean; isFeatured: boolean; stock: number; sortOrder: number;
 }
 export type TransactionStatus =
   'waiting_payment'|'paid'|'processing'|'success'|'failed'|'cancelled'|'refunded';
@@ -55,7 +45,6 @@ export interface Transaction {
   review?: { rating: number; comment: string; createdAt: string } | null;
   expiresAt: string; createdAt: string; updatedAt: string;
 }
-
 export interface Banner {
   _id?: string;
   imageUrl: string;
@@ -65,7 +54,6 @@ export interface Banner {
   isActive: boolean;
   sortOrder: number;
 }
-
 export interface AppSetting {
   banners: Banner[];
   qrisImage: string; qrisName: string; qrisNote: string;
@@ -75,7 +63,6 @@ export interface AppSetting {
   paymentExpiryMinutes: number;
   processingNote: string; successNote: string;
 }
-
 export interface BankAccount {
   _id?: string; bankName: string; accountNumber: string;
   accountName: string; logo: string; qrCode: string;

@@ -139,12 +139,12 @@ export const rewardsAPI = {
   redeem: (points: number, description?: string) => apiClient.post('/rewards/redeem', { points, description }),
 };
 
-export const apigamesAPI = {
-  checkUsername: (gameCode: string, userId: string, serverId?: string) =>
-    apiClient.get('/apigames/cek-username', { 
-      params: { game_code: gameCode, user_id: userId, server_id: serverId } 
-    }),
-};
+// export const apigamesAPI = {
+//   checkUsername: (gameCode: string, userId: string, serverId?: string) =>
+//     apiClient.get('/apigames/cek-username', { 
+//       params: { game_code: gameCode, user_id: userId, server_id: serverId } 
+//     }),
+// };
 
 export const digiflazzAPI = {
   getBalance:  () => apiClient.get('/digiflazz/balance'),
@@ -158,4 +158,18 @@ export const digiflazzAPI = {
     apiClient.post('/digiflazz/check-username', { gameCode, userId, serverId }),
 };
 
+export const promoAPI = {
+  getPublic:  () => apiClient.get('/promo/public'),
+  validate:   (d: { code: string; userId?: string; amount: number; category?: string; productId?: string }) =>
+    apiClient.post('/promo/validate', d),
+  // Admin
+  getAll:     (p?: Record<string,unknown>) => apiClient.get('/promo', { params: p }),
+  create:     (d: Record<string,unknown>) => apiClient.post('/promo', d),
+  update:     (id: string, d: Record<string,unknown>) => apiClient.put(`/promo/${id}`, d),
+  delete:     (id: string) => apiClient.delete(`/promo/${id}`),
+};
+
+export const reviewsPublicAPI = {
+  get: () => apiClient.get('/transactions/public-reviews'),
+};
 export default apiClient;

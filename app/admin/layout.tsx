@@ -7,7 +7,7 @@ import { Layout, Menu, Avatar, Badge, Dropdown, Space, Typography } from 'antd';
 import {
   DashboardOutlined, ShoppingOutlined, TagsOutlined, TransactionOutlined,
   UserOutlined, SettingOutlined, ThunderboltOutlined, LogoutOutlined,
-  BellOutlined, MenuFoldOutlined, MenuUnfoldOutlined, AppstoreOutlined,
+  BellOutlined, MenuFoldOutlined, MenuUnfoldOutlined, AppstoreOutlined, GiftOutlined,
 } from '@ant-design/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import AntProvider from '@/components/providers/AntProvider';
@@ -25,6 +25,7 @@ const NAV_ITEMS = [
   { key: '/admin/games',        icon: <ShoppingOutlined />,     label: 'Games' },
   { key: '/admin/vouchers',     icon: <TagsOutlined />,         label: 'Vouchers' },
   { key: '/admin/users',        icon: <UserOutlined />,         label: 'Users' },
+  { key: '/admin/promo',         icon: <GiftOutlined />,         label: 'Promo & Diskon' },
   { key: '/admin/settings',     icon: <SettingOutlined />,      label: 'Pengaturan' },
 ];
 
@@ -97,10 +98,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Menu
             mode="inline"
             selectedKeys={[activeKey]}
+            style={{ background: 'transparent', border: 'none', padding: '8px' }}
             onClick={({ key }) => router.push(key)}
             items={NAV_ITEMS.map(item => ({
               ...item,
-              
+              style: { borderRadius: 12, marginBottom: 4, height: 44, lineHeight: '44px' },
             }))}
           />
 
@@ -155,8 +157,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 onClick={() => setCollapsed(!collapsed)}
                 className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-colors"
                 style={{ background: 'rgba(255,255,255,0.05)' }}>
-                {collapsed ? 
-                <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               </motion.button>
               <span className="text-white font-bold text-base hidden sm:block">
                 {NAV_ITEMS.find(n => n.key === activeKey)?.label ?? 'Admin'}

@@ -125,7 +125,7 @@ function TxResultCard({ result }: { result: DigiTxResult }) {
    MAIN PAGE
 ═══════════════════════════════════════════════════════════════ */
 export default function AdminDigiflazzPage() {
-  const [activeTab, setActiveTab] = useState<'balance'|'pricelist'|'transaction'|'queue'|'webhook'>('balance');
+const [activeTab, setActiveTab] = useState<'balance'|'pricelist'|'transaction'|'queue'|'webhook'>('balance');
 
   /* ── Balance state ── */
   const [balance,     setBalance]     = useState<number | null>(null);
@@ -415,22 +415,23 @@ export default function AdminDigiflazzPage() {
       </div>
 
       {/* Tabs */}
-      <Segmented
-        value={activeTab}
-        onChange={v => setActiveTab(v as typeof activeTab)}
-        options={[
-          { label: '💰 Saldo',       value: 'balance' },
-          { label: '📋 Produk',      value: 'pricelist' },
-          { label: '⚡ Transaksi',    value: 'transaction' },
-          {
-            label: (
-              <Badge count={queue.length} size="small" offset={[6, -2]}>
-                <span>📦 Antrian</span>
-              </Badge>
-            ),
-            value: 'queue',
-          },
-        ]}
+     <Segmented
+  value={activeTab}
+  onChange={v => setActiveTab(v as typeof activeTab)}
+  options={[
+    { label: '💰 Saldo',       value: 'balance' },
+    { label: '📋 Produk',      value: 'pricelist' },
+    { label: '⚡ Transaksi',    value: 'transaction' },
+    {
+      label: (
+        <Badge count={queue.length} size="small" offset={[6, -2]}>
+          <span>📦 Antrian</span>
+        </Badge>
+      ),
+      value: 'queue',
+    },
+    { label: '🔗 Webhook', value: 'webhook' },   // <-- TAMBAHKAN INI
+  ]}
         style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)' }}
       />
 
@@ -804,6 +805,8 @@ export default function AdminDigiflazzPage() {
         </div>
       )}
 
+
+      {/* ════════ TAB: WEBHOOK ══════════════════════════════ */}
 
       {/* ════════ TAB: WEBHOOK ══════════════════════════════ */}
       {activeTab === 'webhook' && (

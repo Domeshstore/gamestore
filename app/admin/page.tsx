@@ -259,7 +259,7 @@ export default function AdminDashboardPage() {
                       <span className="text-white text-xs font-black">{c.value}%</span>
                     </div>
                     <Progress percent={c.value} showInfo={false} size="small"
-                      strokeColor={c.color}  />
+                      strokeColor={c.color} railColor="rgba(255,255,255,0.05)" />
                   </motion.div>
                 ))}
               </div>

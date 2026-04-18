@@ -1,83 +1,126 @@
+//components/games/GameCard.tsx
+// components/games/GameCard.tsx
 import Link from 'next/link';
-import Image from 'next/image';
+import { Card, Tag, Badge } from 'antd';
+import { FireOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { motion } from 'framer-motion';
 import { Game } from '@/types';
-import { Zap, Star } from 'lucide-react';
-import { cn } from '@/lib/utils/format';
 
-interface GameCardProps {
-  game: Game;
+const CARD_COLORS = ['card-sky','card-purple','card-lime','card-amber','card-coral','card-pink','card-dark','card-emerald'];
+const EMOJIS: Record<string, string> = {
+  'mobile-legends':'⚔️','free-fire':'🔥','pubg-mobile':'🪖','genshin-impact':'🌊',
+  'valorant':'🎯','netflix':'🎬','spotify':'🎵','youtube-premium':'▶️',
+  'nordvpn':'🛡️','disney-hotstar':'✨',
+};
+
+function hashColor(str: string): string {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = str.charCodeAt(i) + ((h << 5) - h);
+  return CARD_COLORS[Math.abs(h) % CARD_COLORS.length];
 }
 
-const PLACEHOLDER_COLORS: Record<string, string> = {
-  mobile: 'from-[#ea5234] to-[#ea5234]/70',
-  pc: 'from-[#ea5234] to-[#ea5234]/70',
-  console: 'from-[#ea5234] to-[#ea5234]/70',
-  other: 'from-[#ea5234] to-[#ea5234]/70',
-};
+// Helper function to get the correct URL based on product type
+function getProductUrl(game: Game): string {
+  const productType = game.productType || 'game';
+  
+  switch (productType) {
+    case 'pulsa':
+      return '/dashboard/topup?type=pulsa';
+    case 'paket_data':
+      return '/dashboard/topup?type=paket_data';
+    case 'pln':
+      return '/dashboard/topup?type=pln';
+    case 'e_money':
+    case 'streaming':
+    case 'voucher':
+    case 'other':
+    default:
+      return `/dashboard/games/${game.slug}`;
+  }
+}
 
-const GAME_EMOJIS: Record<string, string> = {
-  'mobile-legends': '⚔️',
-  'free-fire': '🔥',
-  'pubg-mobile': '🪖',
-  'genshin-impact': '🌊',
-  'valorant': '🎯',
-};
+export default function GameCard({ game }: { game: Game }) {
+  const colorClass = hashColor(game.slug);
+  const emoji      = EMOJIS[game.slug] ?? '🎮';
+  const productUrl = getProductUrl(game);
+  const productType = game.productType || 'game';
 
-export default function GameCard({ game }: GameCardProps) {
-  const gradient = PLACEHOLDER_COLORS[game.category] ?? PLACEHOLDER_COLORS.other;
-  const emoji = GAME_EMOJIS[game.slug] ?? '🎮';
+  // Badge label for different product types
+  const getProductBadge = () => {
+    switch (productType) {
+      case 'pulsa':
+        return { label: 'Pulsa', color: '#10b981' };
+      case 'paket_data':
+        return { label: 'Paket Data', color: '#3b82f6' };
+      case 'pln':
+        return { label: 'Token PLN', color: '#f59e0b' };
+      case 'e_money':
+        return { label: 'E-Money', color: '#8b5cf6' };
+      case 'streaming':
+        return { label: 'Streaming', color: '#ec489a' };
+      case 'voucher':
+        return { label: 'Voucher', color: '#06b6d4' };
+      default:
+        return null;
+    }
+  };
+
+  const badge = getProductBadge();
 
   return (
-    <Link href={`/dashboard/games/${game.slug}`} className="group block">
-      <div className="bg-[#ea5234]/10 border border-[#ea5234]/20 rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl backdrop-blur-sm"
-        style={{ boxShadow: '0 4px 12px rgba(234, 82, 52, 0.1)' }}>
-        {/* Image / Placeholder */}
-        <div className={cn('relative h-36 bg-gradient-to-br', gradient)}>
-          {game.image ? (
-            <Image
-              src={game.image}
-              alt={game.name}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-5xl filter drop-shadow-lg">{emoji}</span>
-            </div>
-          )}
+    <Link href={productUrl}>
+      <motion.div
+        whileHover={{ y: -6, scale: 1.02 }}
+        whileTap={{ scale: 0.97 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      >
+        <div className={`game-card ${colorClass}`} style={{ minHeight: 160, position: 'relative' }}>
+          {/* Featured badge */}
           {game.isFeatured && (
-            <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full px-2 py-0.5"
-              style={{ background: '#ea5234', backdropFilter: 'blur(8px)' }}>
-              <Star className="w-3 h-3 text-white fill-white" />
-              <span className="text-white text-[10px] font-bold">HOT</span>
+            <div className="absolute top-3 right-3 z-10">
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-black text-white"
+                style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)' }}>
+                <FireOutlined /> HOT
+              </span>
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        </div>
 
-        {/* Info */}
-        <div className="p-4">
-          <h3 className="text-white font-semibold text-sm leading-tight transition-colors line-clamp-2 group-hover:text-[#ea5234]">
-            {game.name}
-          </h3>
-          <p className="text-slate-500 text-xs mt-1">{game.publisher}</p>
-
-          <div className="flex items-center justify-between mt-3">
-            <div className="flex flex-wrap gap-1">
-              {game.platform.slice(0, 2).map((p) => (
-                <span key={p} className="text-[10px] px-2 py-0.5 rounded-full"
-                  style={{ background: '#ea523420', color: '#ea5234' }}>
-                  {p}
-                </span>
-              ))}
+          {/* Product Type Badge */}
+          {badge && (
+            <div className="absolute top-3 left-3 z-10">
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold text-white"
+                style={{ background: badge.color, boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
+                {badge.label}
+              </span>
             </div>
-            <div className="flex items-center gap-1" style={{ color: '#ea5234' }}>
-              <Zap className="w-3 h-3" />
-              <span className="text-[10px] font-semibold">Top Up</span>
+          )}
+
+          <div className="p-4 flex flex-col h-full">
+            {/* Emoji */}
+            <div className="text-4xl mb-3 filter drop-shadow-lg">{emoji}</div>
+
+            {/* Image if available */}
+            {game.image && (
+              <div className="absolute inset-0 opacity-15">
+                <img src={game.image} alt={game.name} className="w-full h-full object-cover" />
+              </div>
+            )}
+
+            <div className="mt-auto">
+              <div className="text-white font-black text-sm leading-tight mb-1 drop-shadow">{game.name}</div>
+              <div className="text-white/60 text-xs mb-2">{game.publisher}</div>
+              <div className="flex items-center gap-1">
+                {game.platform?.slice(0,2).map(p => (
+                  <span key={p} className="text-[10px] px-2 py-0.5 rounded-full font-bold text-white"
+                    style={{ background: 'rgba(0,0,0,0.3)' }}>
+                    {p}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </Link>
   );
 }

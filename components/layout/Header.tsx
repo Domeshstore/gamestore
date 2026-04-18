@@ -11,9 +11,8 @@ import { cn } from '@/lib/utils/format';
 import Image from 'next/image';
 import { Layout, Menu, Avatar, Space, Badge, Dropdown, Button, Typography } from 'antd';
 import {
-  HomeOutlined, AppstoreOutlined, TransactionOutlined,
-  GiftOutlined, UserOutlined, LogoutOutlined,
-  ShopFilled,
+  HomeOutlined, AppstoreOutlined, TransactionOutlined, PhoneOutlined,
+  GiftOutlined, UserOutlined, LogoutOutlined, ShopFilled,
   ThunderboltOutlined,
 } from '@ant-design/icons';
 
@@ -30,6 +29,8 @@ export default function Header() {
 const navItems = [
     { key: '/dashboard',              label: 'Home',      icon: <HomeOutlined /> },
     { key: '/dashboard/games',        label: 'Games',     icon: <AppstoreOutlined /> },
+    { key: '/dashboard/topup',         label: 'Pulsa & Data', icon: <PhoneOutlined /> },
+
     { key: '/dashboard/transactions', label: 'Transaksi', icon: <TransactionOutlined /> },
   ];
 

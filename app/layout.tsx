@@ -6,6 +6,7 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import ThemeProvider from "@/theme/ThemeProvider";
 import { IBM_Plex_Sans, Roboto_Slab } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { SSEProvider } from '@/components/providers/SSEProvider';
 
 const robotoSlabHeading = Roboto_Slab({subsets:['latin'],variable:'--font-heading'});
 
@@ -26,7 +27,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="">
          <AntdRegistry>
   <ThemeProvider>
+     <SSEProvider>
     {children}
+
+     </SSEProvider>
     <Toaster
       position="top-right"
       toastOptions={{
