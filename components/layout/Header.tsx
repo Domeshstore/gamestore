@@ -13,7 +13,7 @@ import { Layout, Menu, Avatar, Space, Badge, Dropdown, Button, Typography } from
 import {
   HomeOutlined, AppstoreOutlined, TransactionOutlined, PhoneOutlined,
   GiftOutlined, UserOutlined, LogoutOutlined, ShopFilled,
-  ThunderboltOutlined,
+  ThunderboltOutlined, WifiOutlined,
 } from '@ant-design/icons';
 
 import { motion } from 'framer-motion';
@@ -29,7 +29,7 @@ export default function Header() {
 const navItems = [
     { key: '/dashboard',              label: 'Home',      icon: <HomeOutlined /> },
     { key: '/dashboard/games',        label: 'Games',     icon: <AppstoreOutlined /> },
-    { key: '/dashboard/topup',         label: 'Pulsa & Data', icon: <PhoneOutlined /> },
+    { key: '/dashboard/topup',         label: 'Pulsa & Data', icon: <WifiOutlined /> },
 
     { key: '/dashboard/transactions', label: 'Transaksi', icon: <TransactionOutlined /> },
   ];
