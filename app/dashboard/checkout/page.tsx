@@ -1,4 +1,3 @@
-// app/dashboard/checkout/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -28,16 +27,20 @@ const PAYMENT_METHODS: { value: PaymentMethod; label: string; icon: React.Elemen
   { value:'reward_points',label:'Reward Points',  icon:Coins,     desc:'Gunakan poin kamu' },
 ];
 
-const ss = { background:'oklch(0.27 0.01 17.95)', border:'1px solid oklch(0.32 0.02 34.90)', borderRadius:20 };
+const ss = { 
+  background: '#2a2a2a', 
+  border: '1px solid rgba(234, 82, 52, 0.25)', 
+  borderRadius: 20 
+};
 
 function StepBadge({ n, label, done }: { n: number; label: string; done?: boolean }) {
   return (
     <div className="flex items-center gap-2 mb-4">
       <div className="w-7 h-7 rounded-xl flex items-center justify-center text-sm font-black text-white shrink-0"
-        style={{ background: done ? 'oklch(0.55 0.15 145)' : 'oklch(0.92 0.06 67.02)', color: done ? 'white' : 'oklch(0.16 0.01 17.53)' }}>
+        style={{ background: done ? '#10b981' : '#ea5234', color: done ? 'white' : 'white' }}>
         {done ? '✓' : n}
       </div>
-      <span style={{ color:'white', fontWeight:800, fontSize:15 }}>{label}</span>
+      <span style={{ color: '#f8d9b9', fontWeight: 800, fontSize: 15 }}>{label}</span>
     </div>
   );
 }
@@ -58,9 +61,6 @@ export default function CheckoutPage() {
   const [promoResult,setPromoResult]= useState<{ valid:boolean; promoId:string; promoName:string; discount:number; finalPrice:number } | null>(null);
   const [promoLoading,setPromoLoading]=useState(false);
   const [promoError,  setPromoError] = useState('');
-
-  // Get userId safely (handle both _id and id field names)
-  const userId = user?._id || user?.id;
 
   useEffect(() => {
     if (!game || !voucher || !targetId) {
@@ -90,6 +90,9 @@ export default function CheckoutPage() {
     setPromoError('');
     setPromoResult(null);
     try {
+      // Ambil userId dari user object (gunakan properti yang tersedia)
+      const userId = (user as any)?._id || (user as any)?.id || (user as any)?.userId;
+      
       const res = await promoAPI.validate({
         code:      promoCode.trim(),
         userId:    userId,
@@ -148,201 +151,206 @@ export default function CheckoutPage() {
 
   return (
     <AuthGuard>
-      <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">
-        {/* Back */}
-        <button onClick={() => router.back()}
-          className="flex items-center gap-2 text-sm font-semibold transition-colors"
-          style={{ color:'oklch(0.65 0.01 17.53)' }}>
-          <ChevronLeft className="w-4 h-4" /> Kembali
-        </button>
+      <div className="min-h-screen" style={{ background: '#1a1a1a' }}>
+        <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">
+          {/* Back */}
+          <button onClick={() => router.back()}
+            className="flex items-center gap-2 text-sm font-semibold transition-colors"
+            style={{ color: '#b4b4b4' }}>
+            <ChevronLeft className="w-4 h-4" /> Kembali
+          </button>
 
-        <h1 style={{ color:'white', fontWeight:900, fontSize:26 }}>Konfirmasi Pesanan</h1>
+          <h1 style={{ color: '#f8d9b9', fontWeight: 900, fontSize: 26 }}>Konfirmasi Pesanan</h1>
 
-        {/* ── RINGKASAN PRODUK ── */}
-        <div className="p-5 rounded-2xl" style={ss}>
-          <StepBadge n={1} label="Ringkasan Pembelian" done />
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0"
-              style={{ background:'oklch(0.92 0.06 67.02 / 0.12)', border:'1px solid oklch(0.92 0.06 67.02 / 0.22)' }}>
-              {game.productType === 'game' ? '🎮' : game.productType === 'pulsa' ? '📱' : game.productType === 'e_money' ? '💳' : game.productType === 'streaming' ? '🎬' : '⚡'}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div style={{ color:'white', fontWeight:800, fontSize:16 }}>{game.name}</div>
-              <div style={{ color:'oklch(0.65 0.01 17.53)', fontSize:14 }}>{voucher.name}</div>
-              <div style={{ color:'oklch(0.55 0.01 17.53)', fontSize:13 }}>
-                Untuk: <strong style={{ color:'white' }}>{targetId}{serverId ? `/${serverId}` : ''}</strong>
-                {targetUsername && <> · <span style={{ color:'oklch(0.92 0.06 67.02)' }}>{targetUsername}</span></>}
+          {/* ── RINGKASAN PRODUK ── */}
+          <div className="p-5 rounded-2xl" style={ss}>
+            <StepBadge n={1} label="Ringkasan Pembelian" done />
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+                style={{ background: 'rgba(234, 82, 52, 0.12)', border: '1px solid rgba(234, 82, 52, 0.22)' }}>
+                {game.productType === 'game' ? '🎮' : game.productType === 'pulsa' ? '📱' : game.productType === 'e_money' ? '💳' : game.productType === 'streaming' ? '🎬' : '⚡'}
               </div>
-            </div>
-            <div className="text-right shrink-0">
-              <div style={{ color:'oklch(0.92 0.06 67.02)', fontWeight:900, fontSize:18 }}>{formatCurrency(basePrice)}</div>
-              {voucher.originalPrice > basePrice && (
-                <div style={{ color:'oklch(0.55 0.01 17.53)', fontSize:12, textDecoration:'line-through' }}>
-                  {formatCurrency(voucher.originalPrice)}
+              <div className="flex-1 min-w-0">
+                <div style={{ color: '#f8d9b9', fontWeight: 800, fontSize: 16 }}>{game.name}</div>
+                <div style={{ color: '#b4b4b4', fontSize: 14 }}>{voucher.name}</div>
+                <div style={{ color: '#b4b4b4', fontSize: 13 }}>
+                  Untuk: <strong style={{ color: '#f8d9b9' }}>{targetId}{serverId ? `/${serverId}` : ''}</strong>
+                  {targetUsername && <> · <span style={{ color: '#ea5234' }}>{targetUsername}</span></>}
                 </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* ── KONTAK UNTUK NOTIFIKASI ── */}
-        <div className="p-5 rounded-2xl" style={ss}>
-          <StepBadge n={2} label="Kontak untuk Notifikasi" />
-          <div className="p-3 rounded-xl mb-4 flex items-start gap-2"
-            style={{ background:'oklch(0.65 0.12 220 / 0.08)', border:'1px solid oklch(0.65 0.12 220 / 0.18)' }}>
-            <Info className="w-4 h-4 mt-0.5 shrink-0" style={{ color:'oklch(0.65 0.12 220)' }} />
-            <p style={{ color:'oklch(0.75 0.05 220)', fontSize:13, lineHeight:1.6 }}>
-              Kami akan mengirim notifikasi status transaksi (sukses/gagal) ke nomor WhatsApp atau email yang kamu isi. Isi salah satu atau keduanya.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider mb-2" style={{ color:'oklch(0.65 0.01 17.53)' }}>
-                <MessageCircle className="w-3.5 h-3.5 inline mr-1.5" />Nomor WhatsApp
-              </label>
-              <input value={whatsapp} onChange={e => setWhatsapp(e.target.value)}
-                placeholder="08xxxxxxxxxx" type="tel" className="input-field" />
-            </div>
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider mb-2" style={{ color:'oklch(0.65 0.01 17.53)' }}>
-                <Mail className="w-3.5 h-3.5 inline mr-1.5" />Email
-              </label>
-              <input value={email} onChange={e => setEmail(e.target.value)}
-                placeholder="email@contoh.com" type="email" className="input-field" />
-            </div>
-          </div>
-          {!whatsapp && !email && (
-            <p className="mt-2 text-xs" style={{ color:'oklch(0.65 0.15 30)' }}>
-              ⚠️ Isi minimal satu kontak agar kami bisa mengirim notifikasi
-            </p>
-          )}
-        </div>
-
-        {/* ── KODE PROMO ── */}
-        <div className="p-5 rounded-2xl" style={ss}>
-          <StepBadge n={3} label="Kode Promo (Opsional)" />
-
-          {promoResult ? (
-            <motion.div initial={{ opacity:0, scale:0.97 }} animate={{ opacity:1, scale:1 }}
-              className="flex items-center justify-between p-4 rounded-xl"
-              style={{ background:'oklch(0.55 0.15 145 / 0.10)', border:'1px solid oklch(0.55 0.15 145 / 0.25)' }}>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 shrink-0" style={{ color:'oklch(0.55 0.15 145)' }} />
-                <div>
-                  <div style={{ color:'white', fontWeight:700 }}>Promo "{promoResult.promoName}"</div>
-                  <div style={{ color:'oklch(0.55 0.15 145)', fontSize:13, fontWeight:700 }}>
-                    Hemat {formatCurrency(promoResult.discount)}
+              </div>
+              <div className="text-right shrink-0">
+                <div style={{ color: '#ea5234', fontWeight: 900, fontSize: 18 }}>{formatCurrency(basePrice)}</div>
+                {voucher.originalPrice > basePrice && (
+                  <div style={{ color: '#b4b4b4', fontSize: 12, textDecoration: 'line-through' }}>
+                    {formatCurrency(voucher.originalPrice)}
                   </div>
-                </div>
+                )}
               </div>
-              <button onClick={removePromo} className="text-xs font-bold px-3 py-1.5 rounded-lg"
-                style={{ color:'oklch(0.65 0.15 30)', background:'oklch(0.65 0.15 30 / 0.10)' }}>
-                Hapus
-              </button>
-            </motion.div>
-          ) : (
-            <div>
-              <div className="flex gap-2">
-                <input value={promoCode} onChange={e => setPromoCode(e.target.value.toUpperCase())}
-                  onKeyDown={e => e.key==='Enter' && handleValidatePromo()}
-                  placeholder="Masukkan kode promo (cth: NEWUSER33)" className="input-field flex-1"
-                  style={{ fontFamily:'monospace', letterSpacing:'0.04em' }} />
-                <button onClick={handleValidatePromo} disabled={!promoCode.trim() || promoLoading}
-                  className="px-4 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all disabled:opacity-50"
-                  style={{ background:'oklch(0.92 0.06 67.02)', color:'oklch(0.16 0.01 17.53)' }}>
-                  {promoLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Tag className="w-4 h-4" />}
-                  Pakai
-                </button>
-              </div>
-              {promoError && (
-                <div className="flex items-center gap-2 mt-2 text-sm" style={{ color:'oklch(0.65 0.15 30)' }}>
-                  <XCircle className="w-4 h-4 shrink-0" /> {promoError}
-                </div>
-              )}
-              <p className="text-xs mt-2" style={{ color:'oklch(0.50 0.01 17.53)' }}>
-                Pengguna baru? Coba kode <button onClick={() => setPromoCode('NEWUSER33')} className="font-mono font-bold hover:underline" style={{ color:'oklch(0.92 0.06 67.02)' }}>NEWUSER33</button> untuk diskon 33%
+            </div>
+          </div>
+
+          {/* ── KONTAK UNTUK NOTIFIKASI ── */}
+          <div className="p-5 rounded-2xl" style={ss}>
+            <StepBadge n={2} label="Kontak untuk Notifikasi" />
+            <div className="p-3 rounded-xl mb-4 flex items-start gap-2"
+              style={{ background: 'rgba(59, 130, 246, 0.08)', border: '1px solid rgba(59, 130, 246, 0.18)' }}>
+              <Info className="w-4 h-4 mt-0.5 shrink-0" style={{ color: '#3b82f6' }} />
+              <p style={{ color: '#b4b4b4', fontSize: 13, lineHeight: 1.6 }}>
+                Kami akan mengirim notifikasi status transaksi (sukses/gagal) ke nomor WhatsApp atau email yang kamu isi. Isi salah satu atau keduanya.
               </p>
             </div>
-          )}
-        </div>
-
-        {/* ── METODE PEMBAYARAN ── */}
-        <div className="p-5 rounded-2xl" style={ss}>
-          <StepBadge n={4} label="Metode Pembayaran" />
-          <div className="grid grid-cols-2 gap-2.5">
-            {PAYMENT_METHODS.map(({ value, label, icon: Icon, desc }) => {
-              const disabled = value === 'reward_points' && !canUsePoints;
-              const active   = paymentMethod === value;
-              return (
-                <button key={value} disabled={disabled}
-                  onClick={() => setPaymentMethod(value)}
-                  className="flex items-center gap-3 p-3.5 rounded-xl text-left transition-all disabled:opacity-40"
-                  style={{
-                    background: active ? 'oklch(0.92 0.06 67.02 / 0.12)' : 'oklch(0.24 0.01 17.53)',
-                    border: `1px solid ${active ? 'oklch(0.92 0.06 67.02 / 0.40)' : 'oklch(0.32 0.02 34.90)'}`,
-                    boxShadow: active ? '0 0 12px oklch(0.92 0.06 67.02 / 0.15)' : 'none',
-                  }}>
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: active ? 'oklch(0.92 0.06 67.02 / 0.20)' : 'oklch(0.30 0.01 17.53)' }}>
-                    <Icon className="w-4 h-4" style={{ color: active ? 'oklch(0.92 0.06 67.02)' : 'oklch(0.65 0.01 17.53)' }} />
-                  </div>
-                  <div className="min-w-0">
-                    <div style={{ color: active ? 'white' : 'oklch(0.80 0 0)', fontWeight:700, fontSize:13 }}>{label}</div>
-                    <div style={{ color:'oklch(0.50 0.01 17.53)', fontSize:11 }}>
-                      {value === 'reward_points' ? `${user?.rewardPoints ?? 0} pts` : desc}
-                    </div>
-                  </div>
-                  {active && (
-                    <div className="ml-auto shrink-0">
-                      <CheckCircle className="w-4 h-4" style={{ color:'oklch(0.92 0.06 67.02)' }} />
-                    </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* ── RINCIAN HARGA ── */}
-        <div className="p-5 rounded-2xl" style={ss}>
-          <p style={{ color:'oklch(0.65 0.01 17.53)', fontWeight:700, fontSize:12, textTransform:'uppercase', letterSpacing:'0.06em', marginBottom:12 }}>
-            Rincian Pembayaran
-          </p>
-          <div className="space-y-2.5 text-sm">
-            {[
-              ['Harga Voucher',    formatCurrency(basePrice)],
-              ...(voucher.originalPrice > basePrice ? [['Diskon Produk',`-${formatCurrency(voucher.originalPrice - basePrice)}`]] : []),
-              ...(discount > 0 ? [[`Promo (${promoCode})`, `-${formatCurrency(discount)}`]] : []),
-              ...(paymentMethod === 'reward_points' ? [['Reward Points Digunakan', `-${formatCurrency(finalPrice)}`]] : []),
-            ].map(([l, v]) => (
-              <div key={l} className="flex justify-between">
-                <span style={{ color:'oklch(0.65 0.01 17.53)' }}>{l}</span>
-                <span style={{ color: v.startsWith('-') ? 'oklch(0.55 0.15 145)' : 'white', fontWeight:600 }}>{v}</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#b4b4b4' }}>
+                  <MessageCircle className="w-3.5 h-3.5 inline mr-1.5" />Nomor WhatsApp
+                </label>
+                <input value={whatsapp} onChange={e => setWhatsapp(e.target.value)}
+                  placeholder="08xxxxxxxxxx" type="tel" 
+                  className="w-full px-4 py-3 rounded-xl bg-[#242424] border border-[#ea5234]/25 text-white focus:outline-none focus:border-[#ea5234]/50" />
               </div>
-            ))}
-            <div className="flex justify-between font-black text-base pt-2"
-              style={{ borderTop:'1px solid oklch(0.32 0.02 34.90)' }}>
-              <span style={{ color:'oklch(0.85 0 0)' }}>Total Bayar</span>
-              <span style={{ color:'oklch(0.92 0.06 67.02)', fontSize:20 }}>
-                {paymentMethod === 'reward_points' ? 'Gratis' : formatCurrency(finalPrice)}
-              </span>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#b4b4b4' }}>
+                  <Mail className="w-3.5 h-3.5 inline mr-1.5" />Email
+                </label>
+                <input value={email} onChange={e => setEmail(e.target.value)}
+                  placeholder="email@contoh.com" type="email" 
+                  className="w-full px-4 py-3 rounded-xl bg-[#242424] border border-[#ea5234]/25 text-white focus:outline-none focus:border-[#ea5234]/50" />
+              </div>
+            </div>
+            {!whatsapp && !email && (
+              <p className="mt-2 text-xs" style={{ color: '#ef4444' }}>
+                ⚠️ Isi minimal satu kontak agar kami bisa mengirim notifikasi
+              </p>
+            )}
+          </div>
+
+          {/* ── KODE PROMO ── */}
+          <div className="p-5 rounded-2xl" style={ss}>
+            <StepBadge n={3} label="Kode Promo (Opsional)" />
+
+            {promoResult ? (
+              <motion.div initial={{ opacity:0, scale:0.97 }} animate={{ opacity:1, scale:1 }}
+                className="flex items-center justify-between p-4 rounded-xl"
+                style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 shrink-0" style={{ color: '#10b981' }} />
+                  <div>
+                    <div style={{ color: '#f8d9b9', fontWeight: 700 }}>Promo "{promoResult.promoName}"</div>
+                    <div style={{ color: '#10b981', fontSize: 13, fontWeight: 700 }}>
+                      Hemat {formatCurrency(promoResult.discount)}
+                    </div>
+                  </div>
+                </div>
+                <button onClick={removePromo} className="text-xs font-bold px-3 py-1.5 rounded-lg"
+                  style={{ color: '#ef4444', background: 'rgba(239, 68, 68, 0.1)' }}>
+                  Hapus
+                </button>
+              </motion.div>
+            ) : (
+              <div>
+                <div className="flex gap-2">
+                  <input value={promoCode} onChange={e => setPromoCode(e.target.value.toUpperCase())}
+                    onKeyDown={e => e.key==='Enter' && handleValidatePromo()}
+                    placeholder="Masukkan kode promo (cth: NEWUSER33)" 
+                    className="flex-1 px-4 py-3 rounded-xl bg-[#242424] border border-[#ea5234]/25 text-white focus:outline-none focus:border-[#ea5234]/50"
+                    style={{ fontFamily: 'monospace', letterSpacing: '0.04em' }} />
+                  <button onClick={handleValidatePromo} disabled={!promoCode.trim() || promoLoading}
+                    className="px-4 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all disabled:opacity-50"
+                    style={{ background: '#ea5234', color: 'white' }}>
+                    {promoLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Tag className="w-4 h-4" />}
+                    Pakai
+                  </button>
+                </div>
+                {promoError && (
+                  <div className="flex items-center gap-2 mt-2 text-sm" style={{ color: '#ef4444' }}>
+                    <XCircle className="w-4 h-4 shrink-0" /> {promoError}
+                  </div>
+                )}
+                <p className="text-xs mt-2" style={{ color: '#b4b4b4' }}>
+                  Pengguna baru? Coba kode <button onClick={() => setPromoCode('NEWUSER33')} className="font-mono font-bold hover:underline" style={{ color: '#ea5234' }}>NEWUSER33</button> untuk diskon 33%
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* ── METODE PEMBAYARAN ── */}
+          <div className="p-5 rounded-2xl" style={ss}>
+            <StepBadge n={4} label="Metode Pembayaran" />
+            <div className="grid grid-cols-2 gap-2.5">
+              {PAYMENT_METHODS.map(({ value, label, icon: Icon, desc }) => {
+                const disabled = value === 'reward_points' && !canUsePoints;
+                const active   = paymentMethod === value;
+                return (
+                  <button key={value} disabled={disabled}
+                    onClick={() => setPaymentMethod(value)}
+                    className="flex items-center gap-3 p-3.5 rounded-xl text-left transition-all disabled:opacity-40"
+                    style={{
+                      background: active ? 'rgba(234, 82, 52, 0.12)' : '#242424',
+                      border: `1px solid ${active ? 'rgba(234, 82, 52, 0.40)' : 'rgba(234, 82, 52, 0.25)'}`,
+                      boxShadow: active ? '0 0 12px rgba(234, 82, 52, 0.15)' : 'none',
+                    }}>
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                      style={{ background: active ? 'rgba(234, 82, 52, 0.20)' : '#2a2a2a' }}>
+                      <Icon className="w-4 h-4" style={{ color: active ? '#ea5234' : '#b4b4b4' }} />
+                    </div>
+                    <div className="min-w-0">
+                      <div style={{ color: active ? '#f8d9b9' : '#b4b4b4', fontWeight: 700, fontSize: 13 }}>{label}</div>
+                      <div style={{ color: '#b4b4b4', fontSize: 11 }}>
+                        {value === 'reward_points' ? `${user?.rewardPoints ?? 0} pts` : desc}
+                      </div>
+                    </div>
+                    {active && (
+                      <div className="ml-auto shrink-0">
+                        <CheckCircle className="w-4 h-4" style={{ color: '#ea5234' }} />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
-        </div>
 
-        {/* ── CTA ── */}
-        <button onClick={handleOrder} disabled={loading || (!whatsapp && !email)}
-          className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-black text-base transition-all disabled:opacity-50"
-          style={{
-            background:'linear-gradient(135deg, oklch(0.92 0.06 67.02), oklch(0.75 0.12 55.00))',
-            color:'oklch(0.16 0.01 17.53)',
-            boxShadow:'0 8px 24px oklch(0.92 0.06 67.02 / 0.35)',
-          }}>
-          {loading ? <><Loader2 className="w-5 h-5 animate-spin" /> Memproses...</> : <>Buat Pesanan <ArrowRight className="w-5 h-5" /></>}
-        </button>
-        <p className="text-center text-xs" style={{ color:'oklch(0.45 0.01 17.53)' }}>
-          Dengan menekan tombol, kamu menyetujui syarat & ketentuan Domesh Store
-        </p>
+          {/* ── RINCIAN HARGA ── */}
+          <div className="p-5 rounded-2xl" style={ss}>
+            <p style={{ color: '#b4b4b4', fontWeight: 700, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>
+              Rincian Pembayaran
+            </p>
+            <div className="space-y-2.5 text-sm">
+              {[
+                ['Harga Voucher',    formatCurrency(basePrice)],
+                ...(voucher.originalPrice > basePrice ? [['Diskon Produk',`-${formatCurrency(voucher.originalPrice - basePrice)}`]] : []),
+                ...(discount > 0 ? [[`Promo (${promoCode})`, `-${formatCurrency(discount)}`]] : []),
+                ...(paymentMethod === 'reward_points' ? [['Reward Points Digunakan', `-${formatCurrency(finalPrice)}`]] : []),
+              ].map(([l, v]) => (
+                <div key={l} className="flex justify-between">
+                  <span style={{ color: '#b4b4b4' }}>{l}</span>
+                  <span style={{ color: v.startsWith('-') ? '#10b981' : '#f8d9b9', fontWeight: 600 }}>{v}</span>
+                </div>
+              ))}
+              <div className="flex justify-between font-black text-base pt-2"
+                style={{ borderTop: '1px solid rgba(234, 82, 52, 0.25)' }}>
+                <span style={{ color: '#f8d9b9' }}>Total Bayar</span>
+                <span style={{ color: '#ea5234', fontSize: 20 }}>
+                  {paymentMethod === 'reward_points' ? 'Gratis' : formatCurrency(finalPrice)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* ── CTA ── */}
+          <button onClick={handleOrder} disabled={loading || (!whatsapp && !email)}
+            className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-black text-base transition-all disabled:opacity-50"
+            style={{
+              background: 'linear-gradient(135deg, #ea5234, #c13e22)',
+              color: 'white',
+              boxShadow: '0 8px 24px rgba(234, 82, 52, 0.35)',
+            }}>
+            {loading ? <><Loader2 className="w-5 h-5 animate-spin" /> Memproses...</> : <>Buat Pesanan <ArrowRight className="w-5 h-5" /></>}
+          </button>
+          <p className="text-center text-xs" style={{ color: '#b4b4b4' }}>
+            Dengan menekan tombol, kamu menyetujui syarat & ketentuan Domesh Store
+          </p>
+        </div>
       </div>
     </AuthGuard>
   );
