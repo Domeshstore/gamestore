@@ -83,6 +83,25 @@ export default function CheckoutPage() {
   const discount   = promoResult ? promoResult.discount : 0;
   const canUsePoints = (user?.rewardPoints ?? 0) >= finalPrice;
 
+  // Determine product type from game category
+  const getProductType = () => {
+    if (game.category === 'game') return 'game';
+    if (game.category === 'pulsa') return 'pulsa';
+    if (game.category === 'e-money') return 'e_money';
+    if (game.category === 'streaming') return 'streaming';
+    return 'other';
+  };
+
+  // Get icon based on product type
+  const getProductIcon = () => {
+    const type = getProductType();
+    if (type === 'game') return '🎮';
+    if (type === 'pulsa') return '📱';
+    if (type === 'e_money') return '💳';
+    if (type === 'streaming') return '🎬';
+    return '⚡';
+  };
+
   // ── Validate promo ─────────────────────────────────────
   const handleValidatePromo = async () => {
     if (!promoCode.trim()) return;
@@ -90,12 +109,9 @@ export default function CheckoutPage() {
     setPromoError('');
     setPromoResult(null);
     try {
-      // Ambil userId dari user object (gunakan properti yang tersedia)
-      const userId = (user as any)?._id || (user as any)?.id || (user as any)?.userId;
-      
       const res = await promoAPI.validate({
         code:      promoCode.trim(),
-        userId:    userId,
+        userId:    user?.id,
         amount:    basePrice,
         category:  game.category,
         productId: game._id,
@@ -121,7 +137,7 @@ export default function CheckoutPage() {
     try {
       const res = await transactionsAPI.create({
         provider:       voucher.provider,
-        productType:    game.productType || 'game',
+        productType:    getProductType(), // Gunakan fungsi getProductType()
         gameCode:       game.gameCode,
         gameName:       game.name,
         voucherCode:    voucher.providerCode,
@@ -168,7 +184,7 @@ export default function CheckoutPage() {
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0"
                 style={{ background: 'rgba(234, 82, 52, 0.12)', border: '1px solid rgba(234, 82, 52, 0.22)' }}>
-                {game.productType === 'game' ? '🎮' : game.productType === 'pulsa' ? '📱' : game.productType === 'e_money' ? '💳' : game.productType === 'streaming' ? '🎬' : '⚡'}
+                {getProductIcon()}
               </div>
               <div className="flex-1 min-w-0">
                 <div style={{ color: '#f8d9b9', fontWeight: 800, fontSize: 16 }}>{game.name}</div>
