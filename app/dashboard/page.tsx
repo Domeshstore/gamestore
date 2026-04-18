@@ -1,4 +1,5 @@
 /// app/dashboard/page.tsx
+// app/dashboard/page.tsx
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
@@ -150,80 +151,79 @@ export default function DashboardPage() {
   return (
     <div className="space-y-12 pb-16">
 
-
       {/* ── BANNER CAROUSEL ── */}
       {settings?.banners && settings.banners.length > 0 && (
         <section className="max-w-7xl mx-auto px-4">
           <BannerCarousel banners={settings.banners} interval={5000} />
         </section>
       )}
-          {/* Search Bar */}
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ delay: 0.25 }}
-            className="relative max-w-xl mx-auto"
-          >
-            <div className="relative flex items-center rounded-2xl overflow-hidden bg-[#1a1a1a] border-2 border-[#ea5234]/30">
-              <Search className="absolute left-4 w-5 h-5 text-slate-500" />
-              <input
-                value={searchQuery}
-                onChange={e => handleSearch(e.target.value)}
-                placeholder="Cari game, pulsa, e-money, streaming..."
-                className="flex-1 bg-transparent py-4 pl-12 pr-12 text-white text-sm outline-none"
-                style={{ caretColor: '#ea5234' }}
-              />
-              {searchQuery && (
-                <button onClick={clearSearch} className="absolute right-4">
-                  <X className="w-4 h-4 text-slate-500" />
-                </button>
-              )}
-            </div>
+      
+      {/* Search Bar */}
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ delay: 0.25 }}
+        className="relative max-w-xl mx-auto"
+      >
+        <div className="relative flex items-center rounded-2xl overflow-hidden bg-[#1a1a1a] border-2 border-[#ea5234]/30">
+          <Search className="absolute left-4 w-5 h-5 text-slate-500" />
+          <input
+            value={searchQuery}
+            onChange={e => handleSearch(e.target.value)}
+            placeholder="Cari game, pulsa, e-money, streaming..."
+            className="flex-1 bg-transparent py-4 pl-12 pr-12 text-white text-sm outline-none"
+            style={{ caretColor: '#ea5234' }}
+          />
+          {searchQuery && (
+            <button onClick={clearSearch} className="absolute right-4">
+              <X className="w-4 h-4 text-slate-500" />
+            </button>
+          )}
+        </div>
 
-            {/* Search Dropdown */}
-            {searchOpen && (
-              <motion.div 
-                initial={{ opacity: 0, y: 4 }} 
-                animate={{ opacity: 1, y: 0 }}
-                className="absolute top-full mt-2 left-0 right-0 rounded-2xl overflow-hidden z-50 shadow-2xl bg-[#1a1a1a] border border-[#ea5234]/20"
-              >
-                {searching ? (
-                  <div className="flex items-center justify-center py-6 gap-2 text-slate-500">
-                    <Loader2 className="w-4 h-4 animate-spin" /> Mencari...
-                  </div>
-                ) : searchResults.length === 0 ? (
-                  <div className="py-6 text-center text-slate-500 text-sm">
-                    Tidak ada hasil untuk "{searchQuery}"
-                  </div>
-                ) : (
-                  <div>
-                    {searchResults.map(g => (
-                      <Link key={g._id} href={`/dashboard/games/${g.slug}`} onClick={clearSearch}
-                        className="flex items-center gap-3 px-4 py-3 transition-all border-b border-white/5 hover:bg-white/5"
-                      >
-                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg bg-[#ea5234]/20 border border-[#ea5234]/30">
-                          {CATEGORY_ICONS[g.category] ?? '⚡'}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="text-white font-bold text-sm">{g.name}</div>
-                          <div className="text-slate-500 text-xs">{g.publisher}</div>
-                        </div>
-                        <span className="text-xs px-2 py-0.5 rounded-full font-bold capitalize bg-white/5 text-slate-400 border border-white/10">
-                          {g.category}
-                        </span>
-                      </Link>
-                    ))}
-                    <Link href={`/dashboard/games?search=${encodeURIComponent(searchQuery)}`} onClick={clearSearch}
-                      className="flex items-center justify-center gap-2 py-3 text-sm font-bold text-[#ea5234] border-t border-white/10"
-                    >
-                      Lihat semua hasil → "{searchQuery}"
-                    </Link>
-                  </div>
-                )}
-              </motion.div>
+        {/* Search Dropdown */}
+        {searchOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: 4 }} 
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute top-full mt-2 left-0 right-0 rounded-2xl overflow-hidden z-50 shadow-2xl bg-[#1a1a1a] border border-[#ea5234]/20"
+          >
+            {searching ? (
+              <div className="flex items-center justify-center py-6 gap-2 text-slate-500">
+                <Loader2 className="w-4 h-4 animate-spin" /> Mencari...
+              </div>
+            ) : searchResults.length === 0 ? (
+              <div className="py-6 text-center text-slate-500 text-sm">
+                Tidak ada hasil untuk "{searchQuery}"
+              </div>
+            ) : (
+              <div>
+                {searchResults.map(g => (
+                  <Link key={g._id} href={`/dashboard/games/${g.slug}`} onClick={clearSearch}
+                    className="flex items-center gap-3 px-4 py-3 transition-all border-b border-white/5 hover:bg-white/5"
+                  >
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg bg-[#ea5234]/20 border border-[#ea5234]/30">
+                      {CATEGORY_ICONS[g.category] ?? '⚡'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white font-bold text-sm">{g.name}</div>
+                      <div className="text-slate-500 text-xs">{g.publisher}</div>
+                    </div>
+                    <span className="text-xs px-2 py-0.5 rounded-full font-bold capitalize bg-white/5 text-slate-400 border border-white/10">
+                      {g.category}
+                    </span>
+                  </Link>
+                ))}
+                <Link href={`/dashboard/games?search=${encodeURIComponent(searchQuery)}`} onClick={clearSearch}
+                  className="flex items-center justify-center gap-2 py-3 text-sm font-bold text-[#ea5234] border-t border-white/10"
+                >
+                  Lihat semua hasil → "{searchQuery}"
+                </Link>
+              </div>
             )}
           </motion.div>
-      
+        )}
+      </motion.div>
 
       {/* ── FEATURES ── */}
       <section className="max-w-7xl mx-auto px-4">
@@ -271,9 +271,11 @@ export default function DashboardPage() {
       {/* ── PULSA & DATA ── */}
       {pulsaProducts.length > 0 && (
         <section className="max-w-7xl mx-auto px-4">
-          <SectionHeader icon="📱" title="Pulsa & Paket Data" sub="Telkomsel, XL, Indosat, Tri & lainnya" href="/dashboard/games?category=pulsa" />
+          <SectionHeader icon="📱" title="Pulsa & Paket Data" sub="Telkomsel, XL, Indosat, Tri & lainnya" href="/dashboard/topup" />
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {pulsaProducts.map(game => <PulsaCard key={game._id} game={game} />)}
+            {pulsaProducts.map(game => (
+              <PulsaCard key={game._id} game={game} />
+            ))}
           </div>
         </section>
       )}
@@ -308,28 +310,26 @@ export default function DashboardPage() {
         >
           <div className="relative">
             {/* ── PROMO STRIP ── */}
-      {promos.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4">
-          <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
-            {promos.map((p, i) => (
-              <motion.div 
-                key={i} 
-                initial={{ opacity: 0, scale: 0.95 }} 
-                animate={{ opacity: 1, scale: 1 }} 
-                transition={{ delay: i * 0.05 }}
-                className="flex items-center gap-3 px-4 py-3 rounded-2xl shrink-0 cursor-pointer transition-all hover:scale-105 bg-gradient-to-r from-[#ea5234]/20 to-[#ea5234]/5 border border-[#ea5234]/30"
-              >
-                <span className="text-xl">🏷️</span>
-                <div>
-                  <div className="text-[#ea5234] font-black text-sm">{p.name}</div>
-                  <div className="text-slate-500 text-xs">Kode: <strong className="text-white">{p.code}</strong></div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-      )}
-            <div className="text-4xl mb-3 animate-float">🎁</div>
+            {promos.length > 0 && (
+              <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide mb-6">
+                {promos.map((p, i) => (
+                  <motion.div 
+                    key={i} 
+                    initial={{ opacity: 0, scale: 0.95 }} 
+                    animate={{ opacity: 1, scale: 1 }} 
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-center gap-3 px-4 py-3 rounded-2xl shrink-0 cursor-pointer transition-all hover:scale-105 bg-gradient-to-r from-[#ea5234]/20 to-[#ea5234]/5 border border-[#ea5234]/30"
+                  >
+                    <span className="text-xl">🏷️</span>
+                    <div>
+                      <div className="text-[#ea5234] font-black text-sm">{p.name}</div>
+                      <div className="text-slate-500 text-xs">Kode: <strong className="text-white">{p.code}</strong></div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+            <div className="text-4xl mb-3">🎁</div>
             <h2 className="text-2xl font-black text-white mb-2">Pengguna Baru? Dapat Diskon!</h2>
             <p className="text-slate-400 mb-4 text-sm">
               Transaksi pertamamu dapat diskon hingga Rp 50.000
@@ -347,15 +347,28 @@ export default function DashboardPage() {
   );
 }
 
-// ── Mini card components ──────────────────────────────────────
+// ── PulsaCard component with proper navigation ──
 function PulsaCard({ game }: { game: Game }) {
   const OPERATOR_COLORS: Record<string, string> = {
-    telkomsel: '#e4002b', xl: '#0072bc', indosat: '#f7941d',
-    tri: '#f7941d', smartfren: '#e30613', byu: '#e30613',
+    telkomsel: '#e4002b', 
+    xl: '#0072bc', 
+    indosat: '#f7941d',
+    tri: '#f7941d', 
+    smartfren: '#e30613', 
+    byu: '#e30613',
   };
   const color = OPERATOR_COLORS[game.slug] ?? '#6b7280';
+  
+  // Tentukan URL tujuan berdasarkan slug produk
+  let href = '';
+  if (game.slug === 'paket-data') {
+    href = '/dashboard/topup?type=paket_data';
+  } else {
+    href = `/dashboard/topup?type=pulsa&product=${game.slug}`;
+  }
+  
   return (
-    <Link href={`/dashboard/games/${game.slug}`}>
+    <Link href={href}>
       <motion.div whileHover={{ y: -3, scale: 1.03 }} whileTap={{ scale: 0.97 }}
         className="flex flex-col items-center gap-2 p-4 rounded-2xl cursor-pointer text-center bg-[#1a1a1a] border border-white/10 hover:border-[#ea5234]/50 transition-all"
       >
@@ -369,6 +382,7 @@ function PulsaCard({ game }: { game: Game }) {
   );
 }
 
+// ── EmoneyCard component ──
 function EmoneyCard({ game }: { game: Game }) {
   const EMONEY_COLORS: Record<string, { bg: string; emoji: string }> = {
     gopay: { bg: '#00AAD4', emoji: '💚' },
@@ -394,6 +408,7 @@ function EmoneyCard({ game }: { game: Game }) {
   );
 }
 
+// ── StreamingCard component ──
 function StreamingCard({ game }: { game: Game }) {
   const STREAMING: Record<string, { bg: string; emoji: string }> = {
     netflix: { bg: '#E50914', emoji: '🎬' },

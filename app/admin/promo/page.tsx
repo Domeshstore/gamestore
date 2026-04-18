@@ -3,13 +3,12 @@
 import { useEffect, useState } from 'react';
 import {
   Card, Table, Tag, Button, Modal, Form, Input, InputNumber, Select,
-  Switch, Space, DatePicker, Typography, Row, Col, Statistic, Tooltip, Alert,
+  Switch, Space, DatePicker, Typography, Row, Col, Alert,
 } from 'antd';
 import {
   PlusOutlined, EditOutlined, DeleteOutlined, CheckCircleOutlined,
   GiftOutlined, TagOutlined, ThunderboltOutlined, CalendarOutlined,
 } from '@ant-design/icons';
-import { motion } from 'framer-motion';
 import { promoAPI, gamesAPI } from '@/lib/api/client';
 import { formatCurrency, formatDate, getErrorMessage } from '@/lib/utils/format';
 import toast from 'react-hot-toast';
@@ -112,7 +111,7 @@ export default function AdminPromoPage() {
       setModal(false);
       fetchPromos();
     } catch (err) {
-      if ((err as { errorFields?: unknown }).errorFields) return; // validation error
+      if ((err as { errorFields?: unknown }).errorFields) return;
       toast.error(getErrorMessage(err));
     } finally {
       setSaving(false);
@@ -140,7 +139,6 @@ export default function AdminPromoPage() {
     fetchPromos();
   };
 
-  // Stats
   const active  = promos.filter(p => p.isActive).length;
   const expired = promos.filter(p => p.expiresAt && new Date(p.expiresAt) < new Date()).length;
   const totalUsed = promos.reduce((s, p) => s + p.usedCount, 0);
@@ -239,7 +237,6 @@ export default function AdminPromoPage() {
 
   return (
     <div className="space-y-5">
-      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <Title level={3} style={{ color:'white', marginBottom:4, fontWeight:900 }}>🏷️ Manajemen Promo</Title>
@@ -251,7 +248,6 @@ export default function AdminPromoPage() {
         </Button>
       </div>
 
-      {/* Stats */}
       <Row gutter={[12, 12]}>
         {[
           { title:'Total Promo', value:promos.length, icon:<TagOutlined />, color:'oklch(0.92 0.06 67.02)' },
@@ -276,7 +272,6 @@ export default function AdminPromoPage() {
         ))}
       </Row>
 
-      {/* First Transaction Promo Alert */}
       {promos.some(p => p.type === 'first_transaction' && p.isActive) && (
         <Alert
           type="success" showIcon={false}
@@ -296,7 +291,6 @@ export default function AdminPromoPage() {
         />
       )}
 
-      {/* Table */}
       <Card style={cardStyle} bodyStyle={{ padding:0 }}>
         <Table dataSource={promos} columns={cols} rowKey="_id" loading={loading}
           size="middle" scroll={{ x:900 }}
@@ -304,7 +298,6 @@ export default function AdminPromoPage() {
         />
       </Card>
 
-      {/* ── MODAL ── */}
       <Modal
         open={modal}
         title={<span style={{ color:'white', fontWeight:900, fontSize:17 }}>{editPromo ? '✏️ Edit Promo' : '➕ Buat Promo Baru'}</span>}
@@ -346,7 +339,6 @@ export default function AdminPromoPage() {
               </Form.Item>
             </Col>
             <Col span={12}>
-              {/* FIXED InputNumber with type assertion on parser */}
               <Form.Item name="value" label={watchType === 'fixed' ? 'Nominal Diskon (Rp)' : 'Persentase Diskon (%)'} rules={[{ required: true }]}>
                 {watchType === 'fixed' ? (
                   <InputNumber
@@ -354,10 +346,10 @@ export default function AdminPromoPage() {
                     style={{ width: '100%' }}
                     min={0}
                     formatter={v => `Rp ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={v => {
+                    parser={(v): any => {
                       const numeric = parseFloat(String(v).replace(/[Rp,\s]/g, ''));
                       return isNaN(numeric) ? 0 : numeric;
-                    } as any}
+                    }}
                   />
                 ) : (
                   <InputNumber
@@ -366,10 +358,10 @@ export default function AdminPromoPage() {
                     min={0}
                     max={100}
                     formatter={v => `${v}%`}
-                    parser={v => {
+                    parser={(v): any => {
                       const numeric = parseFloat(String(v).replace(/[%,\s]/g, ''));
                       return isNaN(numeric) ? 0 : numeric;
-                    } as any}
+                    }}
                   />
                 )}
               </Form.Item>
@@ -382,14 +374,14 @@ export default function AdminPromoPage() {
                 <Form.Item name="maxDiscount" label="Maksimum Diskon (Rp) — 0 = tidak ada batas">
                   <InputNumber size="large" style={{ width:'100%' }} min={0}
                     formatter={v => `Rp ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g,',')}
-                    parser={displayValue => Number(String(displayValue).replace(/[Rp,\s]/g, '')) as any} />
+                    parser={(displayValue): any => Number(String(displayValue).replace(/[Rp,\s]/g, ''))} />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item name="minOrder" label="Minimum Order (Rp)">
                   <InputNumber size="large" style={{ width:'100%' }} min={0}
                     formatter={v => `Rp ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g,',')}
-                    parser={v => Number(String(v).replace(/[Rp,\s]/g, '')) as any} />
+                    parser={(v): any => Number(String(v).replace(/[Rp,\s]/g, ''))} />
                 </Form.Item>
               </Col>
             </Row>
@@ -408,7 +400,6 @@ export default function AdminPromoPage() {
             </Col>
           </Row>
 
-          {/* Scope */}
           <Form.Item name="scope" label="Berlaku untuk">
             <Select size="large">
               <Select.Option value="all">Semua Produk</Select.Option>
