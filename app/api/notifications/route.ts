@@ -1,7 +1,7 @@
 // app/api/notifications/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+const BACKEND_URL = process.env.BACKEND_URL || '';
 const BACKEND_API_KEY = process.env.BACKEND_API_KEY || '';
 
 export async function GET(req: NextRequest) {
