@@ -42,18 +42,23 @@ const ss = {
   borderRadius: 18 
 };
 
-// Enhanced Voucher Card with Image
+// Enhanced Voucher Card without image (since Voucher type doesn't have image property)
 function VoucherDetailCard({ v, selected, onSelect, pageType }: { v: Voucher; selected: boolean; onSelect(): void; pageType: PageType }) {
   const hasDisc = v.originalPrice > v.price;
   const pct     = hasDisc ? Math.round(((v.originalPrice - v.price) / v.originalPrice) * 100) : 0;
   
-  // Get icon based on voucher type
+  // Get icon based on voucher type and page type
   const getVoucherIcon = () => {
-    if (v.image) return null;
+    // Voucher type based icons
+    if (v.type === 'subscription') return <Star className="w-5 h-5" />;
+    if (v.type === 'diamond') return <Zap className="w-5 h-5" />;
+    if (v.type === 'coin') return <Award className="w-5 h-5" />;
+    
+    // Page type based icons
     if (pageType === 'pulsa') return <Phone className="w-5 h-5" />;
     if (pageType === 'paket_data') return <Wifi className="w-5 h-5" />;
     if (pageType === 'pln') return <Battery className="w-5 h-5" />;
-    if (v.type === 'subscription') return <Star className="w-5 h-5" />;
+    
     return <Gift className="w-5 h-5" />;
   };
 
@@ -68,25 +73,12 @@ function VoucherDetailCard({ v, selected, onSelect, pageType }: { v: Voucher; se
         boxShadow: selected ? '0 0 16px rgba(234, 82, 52, 0.15)' : 'none',
       }}>
       
-      {/* Image or Icon */}
+      {/* Icon */}
       <div className="flex-shrink-0">
-        {v.image ? (
-          <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-[#2a2a2a]">
-            <img 
-              src={v.image} 
-              alt={v.name}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
-          </div>
-        ) : (
-          <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl"
-            style={{ background: selected ? 'rgba(234, 82, 52, 0.20)' : '#2a2a2a' }}>
-            {icon || (pageType === 'pulsa' ? '📱' : pageType === 'paket_data' ? '📶' : '⚡')}
-          </div>
-        )}
+        <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl"
+          style={{ background: selected ? 'rgba(234, 82, 52, 0.20)' : '#2a2a2a' }}>
+          {icon}
+        </div>
       </div>
 
       {/* Content */}
@@ -137,6 +129,9 @@ function VoucherDetailCard({ v, selected, onSelect, pageType }: { v: Voucher; se
                 {v.providerCode}
               </span>
             </div>
+          )}
+          {v.stock > 0 && v.stock < 10 && (
+            <div className="text-[10px] text-orange-500">Sisa {v.stock}</div>
           )}
         </div>
       </div>
@@ -550,7 +545,7 @@ function TopupPageInner() {
                 <div className="space-y-3 max-h-[520px] overflow-y-auto pr-1 custom-scrollbar">
                   {displayVouchers.map(v => (
                     <VoucherDetailCard 
-                      key={v._id || v.id || Math.random()}
+                      key={v._id}
                       v={v} 
                       selected={selectedVoucher?._id === v._id}
                       onSelect={() => setSelectedVoucher(v)}
