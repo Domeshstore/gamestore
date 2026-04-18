@@ -17,7 +17,7 @@ export const getFullImageUrl = (path: string | null | undefined): string => {
       return `/api/proxy/uploads${path}`;
     } else {
       // Direct ke backend (perlu CORS)
-      const apiUrl = process.env.BACKEND_URL || 'http://localhost:5000';
+      const apiUrl = process.env.BACKEND_URL || '';
       return `${apiUrl}${path}`;
     }
   }

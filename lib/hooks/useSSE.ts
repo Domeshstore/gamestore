@@ -1,4 +1,4 @@
-// lib/hooks/useSSE.ts
+// lib/hooks/useSSE.ts (simple version)
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
@@ -19,9 +19,6 @@ export function useSSE() {
   const [isConnected, setIsConnected] = useState(false);
   const [lastMessage, setLastMessage] = useState<SSEMessage | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
-  
-  // ✅ AMBIL isAuthenticated DARI STORE
   const { user, isAuthenticated } = useAuthStore();
 
   const disconnect = useCallback(() => {
@@ -31,122 +28,55 @@ export function useSSE() {
       eventSourceRef.current = null;
       setIsConnected(false);
     }
-    
-    if (reconnectTimeoutRef.current) {
-      clearTimeout(reconnectTimeoutRef.current);
-      reconnectTimeoutRef.current = undefined;
-    }
   }, []);
 
   const connect = useCallback(() => {
-    // ✅ Cek authentication
     if (!isAuthenticated || !user) {
       console.log('[SSE] Not authenticated, skipping connection');
       return;
     }
 
-    // Disconnect existing connection
-    disconnect();
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
+    }
 
-    // ✅ GUNAKAN BACKEND URL LANGSUNG
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL || '';
     const sseUrl = `${backendUrl}/api/notifications/subscribe`;
     
     console.log('[SSE] Connecting to:', sseUrl);
     
     try {
-      const es = new EventSource(sseUrl);
+      const es = new EventSource(sseUrl, { withCredentials: true });
       
       es.onopen = () => {
-        console.log('[SSE] ✅ Connected to notification stream');
+        console.log('[SSE] ✅ Connected');
         setIsConnected(true);
       };
-
-      es.addEventListener('connected', (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          console.log('[SSE] Connection established:', data);
-        } catch (error) {
-          console.error('[SSE] Error parsing connected event:', error);
-        }
-      });
-
-      es.addEventListener('heartbeat', () => {
-        // Keep connection alive - do nothing
-      });
 
       es.addEventListener('transaction_update', (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log('[SSE] 📦 Transaction update:', data);
-          
+          console.log('[SSE] Transaction update:', data);
           setLastMessage(data);
           
-          // Show toast notification
           if (data.status === 'success') {
-            toast.success(`✅ Transaksi ${data.refId} berhasil!`, {
-              duration: 5000,
-              icon: '🎉',
-            });
+            toast.success(`✅ Transaksi ${data.refId} berhasil!`);
           } else if (data.status === 'failed') {
-            toast.error(`❌ Transaksi ${data.refId} gagal: ${data.message || 'Coba lagi'}`);
+            toast.error(`❌ Transaksi ${data.refId} gagal`);
           }
           
-          // Trigger custom event
           window.dispatchEvent(new CustomEvent('transaction_update', { detail: data }));
         } catch (error) {
-          console.error('[SSE] Error parsing transaction_update:', error);
+          console.error('[SSE] Error:', error);
         }
       });
 
-      // Listen for user-specific updates
-      if (user?.id) {
-        es.addEventListener(`user_${user.id}`, (event) => {
-          try {
-            const data = JSON.parse(event.data);
-            console.log('[SSE] 👤 Personal update:', data);
-            
-            window.dispatchEvent(new CustomEvent('my_transaction_update', { detail: data }));
-            
-            if (data.status === 'success') {
-              toast.success(`🎮 Pesanan ${data.refId} selesai! Silakan cek game Anda.`, {
-                duration: 6000,
-              });
-            } else if (data.status === 'failed') {
-              toast.error(`❌ Pesanan ${data.refId} gagal: ${data.message || 'Coba lagi'}`);
-            }
-          } catch (error) {
-            console.error('[SSE] Error parsing personal update:', error);
-          }
-        });
-      }
-
-      es.onerror = (error) => {
-        console.error('[SSE] ❌ Connection error:', {
-          readyState: es.readyState,
-          url: sseUrl
-        });
-        
+      es.onerror = () => {
+        console.log('[SSE] Connection error');
         setIsConnected(false);
         es.close();
-        
-        // Hanya reconnect jika bukan 404 (CLOSED)
-        if (es.readyState === EventSource.CLOSED) {
-          console.log('[SSE] Connection closed, will attempt reconnect');
-          
-          // Clear existing timeout
-          if (reconnectTimeoutRef.current) {
-            clearTimeout(reconnectTimeoutRef.current);
-          }
-          
-          // Attempt reconnect after 3 seconds
-          reconnectTimeoutRef.current = setTimeout(() => {
-            if (isAuthenticated && user) {
-              console.log('[SSE] 🔄 Attempting to reconnect...');
-              connect();
-            }
-          }, 3000);
-        }
+        eventSourceRef.current = null;
       };
 
       eventSourceRef.current = es;
@@ -154,9 +84,8 @@ export function useSSE() {
       console.error('[SSE] Failed to create EventSource:', error);
       setIsConnected(false);
     }
-  }, [isAuthenticated, user, disconnect]);
+  }, [isAuthenticated, user]);
 
-  // ✅ Effect untuk handle connection berdasarkan auth state
   useEffect(() => {
     if (isAuthenticated && user) {
       connect();
@@ -164,11 +93,10 @@ export function useSSE() {
       disconnect();
     }
 
-    // Cleanup on unmount
     return () => {
       disconnect();
     };
-  }, [isAuthenticated, user?.id, connect, disconnect]);
+  }, [isAuthenticated, user?.id]);
 
   return { isConnected, lastMessage };
 }
