@@ -314,7 +314,6 @@ export default function AdminPromoPage() {
         cancelText="Batal"
         confirmLoading={saving}
         width={640}
-        
         styles={{ body:{ background:'oklch(0.27 0.01 17.95)', border:'1px solid oklch(0.35 0.02 34.90)' }, header:{ background:'oklch(0.27 0.01 17.95)' } }}
       >
         <Form form={form} layout="vertical" requiredMark={false}>
@@ -338,33 +337,42 @@ export default function AdminPromoPage() {
 
           <Row gutter={12}>
             <Col span={12}>
-            {/* Inside the <Form> modal, replace the existing "value" Form.Item with this: */}
-<Form.Item name="value" label={watchType === 'fixed' ? 'Nominal Diskon (Rp)' : 'Persentase Diskon (%)'} rules={[{ required: true }]}>
-  {watchType === 'fixed' ? (
-    <InputNumber
-      size="large"
-      style={{ width: '100%' }}
-      min={0}
-      formatter={v => `Rp ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-      parser={v => {
-        const numeric = parseFloat(String(v).replace(/[Rp,\s]/g, ''));
-        return isNaN(numeric) ? 0 : numeric;
-      }}
-    />
-  ) : (
-    <InputNumber
-      size="large"
-      style={{ width: '100%' }}
-      min={0}
-      max={100}
-      formatter={v => `${v}%`}
-      parser={v => {
-        const numeric = parseFloat(String(v).replace(/[%,\s]/g, ''));
-        return isNaN(numeric) ? 0 : numeric;
-      }}
-    />
-  )}
-</Form.Item>
+              <Form.Item name="type" label="Tipe Diskon" rules={[{ required:true }]}>
+                <Select size="large">
+                  <Select.Option value="percentage">% Persentase</Select.Option>
+                  <Select.Option value="fixed">Rp Nominal Tetap</Select.Option>
+                  <Select.Option value="first_transaction">🎁 Pengguna Baru (First Transaction)</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              {/* FIXED InputNumber with type assertion on parser */}
+              <Form.Item name="value" label={watchType === 'fixed' ? 'Nominal Diskon (Rp)' : 'Persentase Diskon (%)'} rules={[{ required: true }]}>
+                {watchType === 'fixed' ? (
+                  <InputNumber
+                    size="large"
+                    style={{ width: '100%' }}
+                    min={0}
+                    formatter={v => `Rp ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={v => {
+                      const numeric = parseFloat(String(v).replace(/[Rp,\s]/g, ''));
+                      return isNaN(numeric) ? 0 : numeric;
+                    } as any}
+                  />
+                ) : (
+                  <InputNumber
+                    size="large"
+                    style={{ width: '100%' }}
+                    min={0}
+                    max={100}
+                    formatter={v => `${v}%`}
+                    parser={v => {
+                      const numeric = parseFloat(String(v).replace(/[%,\s]/g, ''));
+                      return isNaN(numeric) ? 0 : numeric;
+                    } as any}
+                  />
+                )}
+              </Form.Item>
             </Col>
           </Row>
 
@@ -374,14 +382,14 @@ export default function AdminPromoPage() {
                 <Form.Item name="maxDiscount" label="Maksimum Diskon (Rp) — 0 = tidak ada batas">
                   <InputNumber size="large" style={{ width:'100%' }} min={0}
                     formatter={v => `Rp ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g,',')}
-                    parser={displayValue => Number(String(displayValue).replace(/[Rp,\s]/g, ''))} />
+                    parser={displayValue => Number(String(displayValue).replace(/[Rp,\s]/g, '')) as any} />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item name="minOrder" label="Minimum Order (Rp)">
                   <InputNumber size="large" style={{ width:'100%' }} min={0}
                     formatter={v => `Rp ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g,',')}
-                    parser={v => Number(String(v).replace(/[Rp,\s]/g, ''))} />
+                    parser={v => Number(String(v).replace(/[Rp,\s]/g, '')) as any} />
                 </Form.Item>
               </Col>
             </Row>
