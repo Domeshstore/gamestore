@@ -346,7 +346,10 @@ export default function AdminPromoPage() {
       style={{ width: '100%' }}
       min={0}
       formatter={v => `Rp ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-      parser={v => Number(String(v).replace(/[Rp,\s]/g, ''))}
+      parser={v => {
+        const numeric = parseFloat(String(v).replace(/[Rp,\s]/g, ''));
+        return isNaN(numeric) ? 0 : numeric;
+      }}
     />
   ) : (
     <InputNumber
@@ -355,7 +358,10 @@ export default function AdminPromoPage() {
       min={0}
       max={100}
       formatter={v => `${v}%`}
-      parser={v => Number(String(v).replace(/[%,\s]/g, ''))}
+      parser={v => {
+        const numeric = parseFloat(String(v).replace(/[%,\s]/g, ''));
+        return isNaN(numeric) ? 0 : numeric;
+      }}
     />
   )}
 </Form.Item>
@@ -368,7 +374,7 @@ export default function AdminPromoPage() {
                 <Form.Item name="maxDiscount" label="Maksimum Diskon (Rp) — 0 = tidak ada batas">
                   <InputNumber size="large" style={{ width:'100%' }} min={0}
                     formatter={v => `Rp ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g,',')}
-                    parser={v => Number(String(v).replace(/[Rp,\s]/g, ''))} />
+                    parser={displayValue => Number(String(displayValue).replace(/[Rp,\s]/g, ''))} />
                 </Form.Item>
               </Col>
               <Col span={12}>
