@@ -338,21 +338,27 @@ export default function AdminPromoPage() {
 
           <Row gutter={12}>
             <Col span={12}>
-              <Form.Item name="type" label="Tipe Diskon" rules={[{ required:true }]}>
-                <Select size="large">
-                  <Select.Option value="percentage">% Persentase</Select.Option>
-                  <Select.Option value="fixed">Rp Nominal Tetap</Select.Option>
-                  <Select.Option value="first_transaction">🎁 Pengguna Baru (First Transaction)</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item name="value" label={watchType === 'fixed' ? 'Nominal Diskon (Rp)' : 'Persentase Diskon (%)'} rules={[{ required:true }]}>
-                <InputNumber size="large" style={{ width:'100%' }} min={0}
-                  max={watchType === 'fixed' ? undefined : 100}
-                  formatter={v => watchType === 'fixed' ? `Rp ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g,',') : `${v}%`}
-                  parser={v => Number(String(v).replace(/[Rp%,\s]/g, ''))} />
-              </Form.Item>
+            {/* Inside the <Form> modal, replace the existing "value" Form.Item with this: */}
+<Form.Item name="value" label={watchType === 'fixed' ? 'Nominal Diskon (Rp)' : 'Persentase Diskon (%)'} rules={[{ required: true }]}>
+  {watchType === 'fixed' ? (
+    <InputNumber
+      size="large"
+      style={{ width: '100%' }}
+      min={0}
+      formatter={v => `Rp ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+      parser={v => Number(String(v).replace(/[Rp,\s]/g, ''))}
+    />
+  ) : (
+    <InputNumber
+      size="large"
+      style={{ width: '100%' }}
+      min={0}
+      max={100}
+      formatter={v => `${v}%`}
+      parser={v => Number(String(v).replace(/[%,\s]/g, ''))}
+    />
+  )}
+</Form.Item>
             </Col>
           </Row>
 
