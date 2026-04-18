@@ -1,4 +1,3 @@
-//components/games/GameCard.tsx
 // components/games/GameCard.tsx
 import Link from 'next/link';
 import { Card, Tag, Badge } from 'antd';
@@ -19,23 +18,44 @@ function hashColor(str: string): string {
   return CARD_COLORS[Math.abs(h) % CARD_COLORS.length];
 }
 
-// Helper function to get the correct URL based on product type
+// Helper function to get the correct URL based on game category
 function getProductUrl(game: Game): string {
-  const productType = game.productType || 'game';
+  const category = game.category || 'game';
   
-  switch (productType) {
+  switch (category) {
     case 'pulsa':
-      return '/dashboard/topup?type=pulsa';
-    case 'paket_data':
+      return `/dashboard/topup?type=pulsa&product=${game.slug}`;
+    case 'paket-data':
       return '/dashboard/topup?type=paket_data';
     case 'pln':
       return '/dashboard/topup?type=pln';
-    case 'e_money':
+    case 'e-money':
+      return `/dashboard/games/${game.slug}`;
     case 'streaming':
-    case 'voucher':
-    case 'other':
+      return `/dashboard/games/${game.slug}`;
+    case 'game':
     default:
       return `/dashboard/games/${game.slug}`;
+  }
+}
+
+// Helper function to get badge based on game category
+function getProductBadge(category: string) {
+  switch (category) {
+    case 'pulsa':
+      return { label: 'Pulsa', color: '#10b981' };
+    case 'paket-data':
+      return { label: 'Paket Data', color: '#3b82f6' };
+    case 'pln':
+      return { label: 'Token PLN', color: '#f59e0b' };
+    case 'e-money':
+      return { label: 'E-Money', color: '#8b5cf6' };
+    case 'streaming':
+      return { label: 'Streaming', color: '#ec489a' };
+    case 'voucher':
+      return { label: 'Voucher', color: '#06b6d4' };
+    default:
+      return null;
   }
 }
 
@@ -43,29 +63,8 @@ export default function GameCard({ game }: { game: Game }) {
   const colorClass = hashColor(game.slug);
   const emoji      = EMOJIS[game.slug] ?? '🎮';
   const productUrl = getProductUrl(game);
-  const productType = game.productType || 'game';
-
-  // Badge label for different product types
-  const getProductBadge = () => {
-    switch (productType) {
-      case 'pulsa':
-        return { label: 'Pulsa', color: '#10b981' };
-      case 'paket_data':
-        return { label: 'Paket Data', color: '#3b82f6' };
-      case 'pln':
-        return { label: 'Token PLN', color: '#f59e0b' };
-      case 'e_money':
-        return { label: 'E-Money', color: '#8b5cf6' };
-      case 'streaming':
-        return { label: 'Streaming', color: '#ec489a' };
-      case 'voucher':
-        return { label: 'Voucher', color: '#06b6d4' };
-      default:
-        return null;
-    }
-  };
-
-  const badge = getProductBadge();
+  const category = game.category || 'game';
+  const badge = getProductBadge(category);
 
   return (
     <Link href={productUrl}>

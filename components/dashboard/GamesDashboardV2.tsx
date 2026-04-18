@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { gamesAPI, apigamesAPI, settingsAPI } from '@/lib/api/client';
+import { gamesAPI, digiflazzAPI, settingsAPI } from '@/lib/api/client';
 import { Game, Voucher, AppSetting } from '@/types';
 import GameVouchers from '@/components/vouchers/GameVouchers';
 import BannerCarousel from '@/components/ui/BannerCarousel';
@@ -62,7 +62,7 @@ export default function GameDetailPage() {
     if (!game || !userId) return;
     setChecking(true); setCheckedUsername(''); setCheckError('');
     try {
-      const res = await apigamesAPI.checkUsername(game.gameCode, userId, serverId || undefined);
+      const res = await digiflazzAPI.checkUsername(game.gameCode, userId, serverId || undefined);
       const d = res.data.data;
       if (d?.username || d?.name) { setCheckedUsername(d.username || d.name); toast.success('Akun ditemukan!'); }
       else setCheckError('Akun tidak ditemukan');

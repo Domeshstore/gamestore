@@ -6,7 +6,7 @@ import {
   Space, Typography, Row, Col, InputNumber, Tooltip, Upload,
 } from 'antd';
 import {
-  PlusOutlined, EditOutlined, DeleteOutlined, GamepadIcon,
+  PlusOutlined, EditOutlined, DeleteOutlined,
 } from '@ant-design/icons';
 import { Gamepad2, Smartphone, CreditCard, Tv, Gift, Package } from 'lucide-react';
 import { motion } from 'framer-motion';

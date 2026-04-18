@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { gamesAPI, apigamesAPI,  digiflazzAPI } from '@/lib/api/client';
+import { gamesAPI, digiflazzAPI } from '@/lib/api/client';
 import { Game, Voucher } from '@/types';
 import VoucherCard from '@/components/vouchers/VoucherCard';
 import { useCheckoutStore } from '@/lib/store/useCheckoutStore';
