@@ -317,7 +317,7 @@ function PromoContent({ promo }: { promo: Promo }) {
           
           {isExpiringSoon && !isExpired && (
             <div className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
-              <span>⏰</span>
+              <span></span>
               <span>Segera Berakhir!</span>
             </div>
           )}

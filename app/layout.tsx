@@ -4,16 +4,14 @@ import { Toaster } from 'react-hot-toast';
 import './globals.css';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import ThemeProvider from "@/theme/ThemeProvider";
-import { IBM_Plex_Sans, Roboto_Slab } from "next/font/google";
+import { Ubuntu } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { SSEProvider } from '@/components/providers/SSEProvider';
+const ubuntu = Ubuntu({subsets:['latin'],variable:'--font-ubuntu',weight:'400'});
 
-const robotoSlabHeading = Roboto_Slab({subsets:['latin'],variable:'--font-heading'});
-
-const ibmPlexSans = IBM_Plex_Sans({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
-  title: 'Domesh Store — Top Up Game Terpercaya',
+  title: 'BANGDIM Store — Top Up Game Terpercaya',
   icons: {
     icon: '/favicon.ico',
   },
@@ -23,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={cn("font-sans", ibmPlexSans.variable, robotoSlabHeading.variable)}>
+    <html lang="id" className={cn( ubuntu.variable, )}>
       <body className="">
          <AntdRegistry>
   <ThemeProvider>

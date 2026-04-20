@@ -8,24 +8,24 @@ const ss = { background:'oklch(0.27 0.01 17.95)', border:'1px solid oklch(0.32 0
 
 const CHANNELS = [
   {
-    icon:'💬', name:'WhatsApp', handle:'6281234567890',
+    icon:'', name:'WhatsApp', handle:'089508761599',
     desc:'Respon cepat, aktif 08.00–22.00 WIB',
     color:'oklch(0.55 0.15 145)', bg:'oklch(0.30 0.05 145 / 0.15)',
-    link:'https://wa.me/6281234567890',
+    link:'https://wa.me/6289508761599',
     badge:'Paling Cepat',
   },
   {
-    icon:'✈️', name:'Telegram', handle:'@domesh_store',
+    icon:'', name:'Telegram', handle:'@orangbawah9',
     desc:'Notifikasi otomatis & chat 24 jam',
     color:'oklch(0.60 0.12 220)', bg:'oklch(0.28 0.05 220 / 0.15)',
-    link:'https://t.me/domesh_store',
+    link:'https://t.me/@orangbawah9',
     badge:'24 Jam',
   },
   {
-    icon:'📧', name:'Email', handle:'support@domesh.store',
+    icon:'', name:'Email', handle:'support@domesh.pro',
     desc:'Untuk laporan & pertanyaan kompleks',
     color:'oklch(0.92 0.06 67.02)', bg:'oklch(0.92 0.06 67.02 / 0.10)',
-    link:'mailto:support@domesh.store',
+    link:'mailto:support@domesh.pro',
     badge:null,
   },
 ];
@@ -37,7 +37,7 @@ export default function ContactPage() {
         <Header />
         <main className="max-w-2xl mx-auto px-4 py-12">
           <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} className="text-center mb-10">
-            <div className="text-5xl mb-4">📞</div>
+            <div className="text-5xl mb-4"></div>
             <h1 className="text-4xl font-black text-white mb-2">Hubungi Kami</h1>
             <p style={{ color:'oklch(0.65 0.01 17.53)' }}>Tim Domesh Store siap membantu kamu</p>
           </motion.div>
@@ -75,7 +75,7 @@ export default function ContactPage() {
 
           {/* Business hours */}
           <div className="p-5 rounded-2xl mb-6" style={ss}>
-            <h3 style={{ color:'white', fontWeight:800, marginBottom:12 }}>🕐 Jam Operasional</h3>
+            <h3 style={{ color:'white', fontWeight:800, marginBottom:12 }}> Jam Operasional</h3>
             <div className="space-y-2">
               {[
                 ['Senin – Jumat', '08.00 – 22.00 WIB'],
@@ -92,7 +92,7 @@ export default function ContactPage() {
 
           {/* Tips */}
           <div className="p-5 rounded-2xl" style={{ background:'oklch(0.92 0.06 67.02 / 0.08)', border:'1px solid oklch(0.92 0.06 67.02 / 0.18)' }}>
-            <h3 style={{ color:'oklch(0.92 0.06 67.02)', fontWeight:800, marginBottom:8 }}>💡 Tips saat menghubungi CS</h3>
+            <h3 style={{ color:'oklch(0.92 0.06 67.02)', fontWeight:800, marginBottom:8 }}>Tips saat menghubungi CS</h3>
             <ul style={{ color:'oklch(0.75 0.01 17.53)', fontSize:14, lineHeight:1.8 }}>
               <li>• Sertakan <strong style={{ color:'white' }}>Ref ID transaksi</strong> untuk penanganan lebih cepat</li>
               <li>• Lampirkan <strong style={{ color:'white' }}>screenshot bukti transfer</strong> jika ada masalah pembayaran</li>

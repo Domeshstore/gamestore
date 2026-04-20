@@ -2,6 +2,9 @@ import AntProvider from '@/components/providers/AntProvider';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import PromoModal from "@/components/ui/ModalPromo";
+import { Ubuntu } from "next/font/google";
+
+const ubuntu = Ubuntu({subsets:['latin'],variable:'--font-ubuntu',weight:'400'});
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (

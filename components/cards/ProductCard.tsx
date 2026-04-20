@@ -17,14 +17,14 @@ interface ProductCardProps {
 
 // Product type configurations
 const PRODUCT_TYPE_CONFIG: Record<string, { bg: string; gradient: string; label: string; fallbackIcon: string }> = {
-  game: { bg: '#8b5cf6', gradient: 'from-purple-600 to-pink-600', label: 'Game', fallbackIcon: '🎮' },
-  pulsa: { bg: '#10b981', gradient: 'from-emerald-500 to-teal-600', label: 'Pulsa', fallbackIcon: '📱' },
-  paket_data: { bg: '#3b82f6', gradient: 'from-blue-500 to-cyan-600', label: 'Paket Data', fallbackIcon: '📶' },
-  pln: { bg: '#f59e0b', gradient: 'from-amber-500 to-orange-600', label: 'Token PLN', fallbackIcon: '⚡' },
-  e_money: { bg: '#ec489a', gradient: 'from-pink-500 to-rose-600', label: 'E-Money', fallbackIcon: '💳' },
-  streaming: { bg: '#ef4444', gradient: 'from-red-500 to-rose-600', label: 'Streaming', fallbackIcon: '🎬' },
-  voucher: { bg: '#06b6d4', gradient: 'from-cyan-500 to-blue-600', label: 'Voucher', fallbackIcon: '🎫' },
-  other: { bg: '#6b7280', gradient: 'from-gray-500 to-gray-700', label: 'Lainnya', fallbackIcon: '📦' },
+  game: { bg: '#8b5cf6', gradient: 'from-purple-600 to-pink-600', label: 'Game', fallbackIcon: '' },
+  pulsa: { bg: '#10b981', gradient: 'from-emerald-500 to-teal-600', label: 'Pulsa', fallbackIcon: '' },
+  paket_data: { bg: '#3b82f6', gradient: 'from-blue-500 to-cyan-600', label: 'Paket Data', fallbackIcon: '' },
+  pln: { bg: '#f59e0b', gradient: 'from-amber-500 to-orange-600', label: 'Token PLN', fallbackIcon: '' },
+  e_money: { bg: '#ec489a', gradient: 'from-pink-500 to-rose-600', label: 'E-Money', fallbackIcon: '' },
+  streaming: { bg: '#ef4444', gradient: 'from-red-500 to-rose-600', label: 'Streaming', fallbackIcon: '' },
+  voucher: { bg: '#06b6d4', gradient: 'from-cyan-500 to-blue-600', label: 'Voucher', fallbackIcon: '' },
+  other: { bg: '#6b7280', gradient: 'from-gray-500 to-gray-700', label: 'Lainnya', fallbackIcon: '' },
 };
 
 function formatNumber(num: number): string {
@@ -223,18 +223,17 @@ function DefaultCard({ game, config }: { game: Game; config: any }) {
           
           <div className="flex items-center gap-2 mb-3">
             <div className="flex items-center gap-0.5">
-              <Star size={12} className="fill-yellow-400 text-yellow-400" />
-              <span className="text-yellow-400 text-xs font-bold">4.99</span>
+
             </div>
             <div className="w-1 h-1 rounded-full bg-slate-600" />
-            <span className="text-slate-400 text-xs">28K ulasan</span>
+
           </div>
 
           <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/10">
             <div className="flex items-center gap-1">
               <span className="text-[10px] text-slate-500">Mulai dari</span>
               <span className="text-white font-bold text-sm">
-                {minPrice ? formatCurrency(minPrice) : 'Rp 10.000'}
+                {minPrice ? formatCurrency(minPrice) : 'Rp 5.000'}
               </span>
             </div>
             <div className="w-7 h-7 rounded-full flex items-center justify-center bg-white/5 group-hover:bg-white/10 transition-all">

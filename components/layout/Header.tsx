@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { LogOut, User, ChevronDown, Shield, Coins, Menu as MenuIcon, X, Home, ShoppingBag, History, Gift, Phone, Gamepad2, LayoutDashboard } from 'lucide-react';
+import { LogOut, User, ChevronDown, Shield, Coins, Menu as MenuIcon, X, Home, WifiSync, History, Gift, Phone, Gamepad2, LayoutDashboard } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -41,7 +41,7 @@ export default function Header() {
   const navItems = [
     { key: '/dashboard', label: 'Home', icon: <LayoutDashboard size={18} /> },
     { key: '/dashboard/games', label: 'Games', icon: <Gamepad2 size={18} /> },
-    { key: '/dashboard/topup', label: 'Pulsa & Data', icon: <Phone size={18} /> },
+    { key: '/dashboard/topup', label: 'Pulsa & Data', icon: <WifiSync size={18} /> },
     { key: '/dashboard/transactions', label: 'Transaksi', icon: <History size={18} /> },
   ];
 
@@ -49,7 +49,7 @@ export default function Header() {
   const bottomNavItems = [
     { key: '/dashboard', label: 'Beranda', icon: <Home size={22} />, activeIcon: <Home size={22} strokeWidth={2.5} /> },
     { key: '/dashboard/games', label: 'Games', icon: <Gamepad2 size={22} />, activeIcon: <Gamepad2 size={22} strokeWidth={2.5} /> },
-    { key: '/dashboard/topup', label: 'Topup', icon: <Phone size={22} />, activeIcon: <Phone size={22} strokeWidth={2.5} /> },
+    { key: '/dashboard/topup', label: 'Topup', icon: <WifiSync size={22} />, activeIcon: <WifiSync size={22} strokeWidth={2.5} /> },
     { key: '/dashboard/transactions', label: 'Riwayat', icon: <History size={22} />, activeIcon: <History size={22} strokeWidth={2.5} /> },
     ...(isAdmin ? [{ key: '/admin', label: 'Admin', icon: <Shield size={22} />, activeIcon: <Shield size={22} strokeWidth={2.5} /> }] : [])
   ];

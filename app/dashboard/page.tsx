@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import { formatCurrency } from '@/lib/utils/format';
 import { 
   Loader2, ArrowRight, Search, X, Zap, Shield, Clock, Gift, 
-  Flame, Star, Crown, Tv, Gamepad 
+  Flame, Star, Crown, Tv, Gamepad,
 } from 'lucide-react';
 import MarqueeVoucherCards from '@/components/MarqueeVoucherCards';
 import ReviewsSection from '@/components/reviews/ReviewsSection';
@@ -218,7 +218,7 @@ useEffect(() => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#0d0d0d]">
-      <div className="max-w-7xl mx-auto px-4 py-6 space-y-10">
+      <div className="max-w-7xl mx-auto py-2 space-y-10">
 
         {/* ── BANNER CAROUSEL ── */}
         {settings?.banners && settings.banners.length > 0 && (
@@ -334,7 +334,7 @@ useEffect(() => {
             games={plnProducts}
             title="Token Listrik PLN"
             subtitle="Beli token listrik praktis"
-            icon="⚡"
+            icon=""
             seeAllLink="/dashboard/topup?type=pln"
             variant="compact"
           />
@@ -346,7 +346,7 @@ useEffect(() => {
             games={emoneyProducts}
             title="E-Money & Dompet Digital"
             subtitle="GoPay, OVO, Dana, ShopeePay & lainnya"
-            icon="💳"
+            icon=""
             seeAllLink="/dashboard/topup?type=e-money"
             variant="compact"
           />
@@ -358,7 +358,7 @@ useEffect(() => {
             games={streamingProducts}
             title="Streaming & Hiburan"
             subtitle="Netflix, Spotify, YouTube Premium & lainnya"
-            icon="🎬"
+            icon=""
             seeAllLink="/dashboard/topup?type=streaming"
             variant="compact"
           />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import PromoBanner from "./PromoBanner";
 export default function PromoModal() {
   const [open, setOpen] = useState(false);
 
@@ -35,11 +35,7 @@ export default function PromoModal() {
         </button>
 
         {/* Banner Image */}
-        <img
-          src="/promo.jpg"
-          alt="Promo"
-          className="rounded-lg w-full"
-        />
+        <PromoBanner />
 
         {/* CTA */}
         <button
