@@ -14,12 +14,24 @@ export interface Category {
   isActive: boolean; sortOrder: number;
 }
 export interface Game {
-  _id: string; name: string; slug: string; description: string;
-  image: string; banner: string; category: string;
-  platform: string[]; publisher: string;
-  provider: 'digiflazz'|'apigames'|'both'; gameCode: string;
-  requiresServerId: boolean; serverIdLabel: string; userIdLabel: string;
-  isActive: boolean; isFeatured: boolean; sortOrder: number;
+  _id: string; 
+  name: string; 
+  slug: string; 
+  description: string;
+  image: string; 
+  banner: string; 
+  category: string;
+  platform: string[]; 
+  productType: string;
+  publisher: string;
+  provider: 'digiflazz'|'apigames'|'both'; 
+  gameCode: string;
+  requiresServerId: boolean; 
+  serverIdLabel: string; 
+  userIdLabel: string;
+  isActive: boolean; 
+  isFeatured: boolean; 
+  sortOrder: number;
   tags: string[]; vouchers?: Voucher[]; createdAt: string;
 }
 export interface Voucher {

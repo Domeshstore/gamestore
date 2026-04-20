@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AntProvider from '@/components/providers/AntProvider';
 import { useAuthStore } from '@/lib/store/useAuthStore';
 import { useAuth } from '@/lib/hooks/useAuth';
+import Logo from '@/components/logo';
 
 const { Sider, Header, Content } = Layout;
 const { Text } = Typography;
@@ -83,13 +84,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             layout
           >
             <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-              style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', boxShadow: '0 4px 16px rgba(124,58,237,0.4)' }}>
-              <ThunderboltOutlined style={{ color: 'white', fontSize: 18 }} />
+>
+              {/* <ThunderboltOutlined style={{ color: 'white', fontSize: 18 }} /> */}
+              <Logo  />
             </div>
             {!collapsed && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <div className="text-white font-black text-sm leading-tight">Admin Panel</div>
-                <div style={{ color: 'rgba(167,139,250,0.7)', fontSize: 11, fontWeight: 600 }}>GameVoucher</div>
+                <div className="text-white font-black text-sm leading-tight"> Panel</div>
+                <div style={{ color: 'rgba(167,139,250,0.7)', fontSize: 11, fontWeight: 600 }}>BANGDIM</div>
               </motion.div>
             )}
           </motion.div>

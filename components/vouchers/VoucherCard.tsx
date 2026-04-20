@@ -1,3 +1,4 @@
+// VoucherCard.tsx - Komponen kartu voucher dengan desain modern dan interaktif
 'use client';
 
 import { Voucher } from '@/types';

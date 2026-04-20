@@ -198,6 +198,63 @@
     transform: translateY(-2px);
   }
   
+  /* styles/globals.css */
+.game-card {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+
+/* Warna-warna card seperti yang pertama */
+.card-sky {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(14, 165, 233, 0.08));
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.card-purple {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(139, 92, 246, 0.08));
+  border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.card-lime {
+  background: linear-gradient(135deg, rgba(132, 204, 22, 0.15), rgba(101, 163, 13, 0.08));
+  border: 1px solid rgba(132, 204, 22, 0.2);
+}
+
+.card-amber {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.08));
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.card-coral {
+  background: linear-gradient(135deg, rgba(244, 114, 182, 0.15), rgba(236, 72, 153, 0.08));
+  border: 1px solid rgba(244, 114, 182, 0.2);
+}
+
+.card-pink {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(219, 39, 119, 0.08));
+  border: 1px solid rgba(236, 72, 153, 0.2);
+}
+
+.card-dark {
+  background: linear-gradient(135deg, rgba(51, 65, 85, 0.15), rgba(30, 41, 59, 0.08));
+  border: 1px solid rgba(51, 65, 85, 0.2);
+}
+
+.card-emerald {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.08));
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Hover effect */
+.game-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
   /* Task Cards */
   .task-card {
     background: var(--card);

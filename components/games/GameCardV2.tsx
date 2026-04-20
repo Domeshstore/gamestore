@@ -1,3 +1,4 @@
+// GameCardV2.tsx - Versi baru dengan desain lebih modern dan dinamis
 import Link from 'next/link';
 import { Card, Tag, Badge } from 'antd';
 import { FireOutlined, ThunderboltOutlined } from '@ant-design/icons';
@@ -19,7 +20,7 @@ function hashColor(str: string): string {
 
 export default function GameCard({ game }: { game: Game }) {
   const colorClass = hashColor(game.slug);
-  const emoji      = EMOJIS[game.slug] ?? '🎮';
+  const emoji      = EMOJIS[game.slug] ?? '';
 
   return (
     <Link href={`/dashboard/games/${game.slug}`}>

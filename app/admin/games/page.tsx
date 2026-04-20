@@ -166,7 +166,7 @@ export default function AdminGamesPage() {
     {
       title:'Status', key:'status',
       render: (_: unknown, g: Game) => (
-        <Space direction="vertical" size={2}>
+        <Space orientation="vertical" size={2}>
           <Tag color={g.isActive ? 'success' : 'error'} style={{ fontSize:11 }}>
             {g.isActive ? 'Aktif' : 'Nonaktif'}
           </Tag>
@@ -216,7 +216,7 @@ export default function AdminGamesPage() {
         ))}
       </div>
 
-      <Card style={cardStyle} bodyStyle={{ padding:0 }}>
+      <Card style={cardStyle} >
         <Table dataSource={games} columns={cols} rowKey="_id" loading={loading}
           size="middle" scroll={{ x:900 }}
           pagination={{ current:page, total, pageSize:15, showSizeChanger:false, onChange:setPage }} />

@@ -7,9 +7,9 @@ import { Game } from '@/types';
 
 const CARD_COLORS = ['card-sky','card-purple','card-lime','card-amber','card-coral','card-pink','card-dark','card-emerald'];
 const EMOJIS: Record<string, string> = {
-  'mobile-legends':'⚔️','free-fire':'🔥','pubg-mobile':'🪖','genshin-impact':'🌊',
-  'valorant':'🎯','netflix':'🎬','spotify':'🎵','youtube-premium':'▶️',
-  'nordvpn':'🛡️','disney-hotstar':'✨',
+  'mobile-legends':'','free-fire':'','pubg-mobile':'','genshin-impact':'',
+  'valorant':'','netflix':'','spotify':'','youtube-premium':'',
+  'nordvpn':'','disney-hotstar':'',
 };
 
 function hashColor(str: string): string {
@@ -61,7 +61,7 @@ function getProductBadge(category: string) {
 
 export default function GameCard({ game }: { game: Game }) {
   const colorClass = hashColor(game.slug);
-  const emoji      = EMOJIS[game.slug] ?? '🎮';
+  const emoji      = EMOJIS[game.slug] ?? '';
   const productUrl = getProductUrl(game);
   const category = game.category || 'game';
   const badge = getProductBadge(category);

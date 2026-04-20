@@ -42,7 +42,7 @@ export function useSSE() {
     }
 
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL || '';
-    const sseUrl = `${backendUrl}/api/notifications/subscribe`;
+    const sseUrl = `${backendUrl}/api/notifications`;
     
     console.log('[SSE] Connecting to:', sseUrl);
     

@@ -13,7 +13,7 @@ interface VoucherCardProps {
 }
 
 const TYPE_EMOJI: Record<string, string> = {
-  diamond: '💎', coin: '🪙', subscription: '👑', item: '🎁', other: '⚡',
+  diamond: '', coin: '', subscription: '', item: '', other: '',
 };
 
 export default function VoucherCard({ voucher, selected, onSelect, variant = 'default' }: VoucherCardProps) {

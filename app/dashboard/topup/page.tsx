@@ -36,7 +36,7 @@ const PAGE_CONFIG = {
 };
 
 const ss = { 
-  background: '#2a2a2a', 
+  background: '#0f0e0e', 
   border: '1px solid rgba(234, 82, 52, 0.25)', 
   borderRadius: 18 
 };
@@ -62,14 +62,14 @@ function VoucherDetailCard({ v, selected, onSelect, pageType }: { v: Voucher; se
     <motion.button onClick={onSelect} whileHover={{ scale:1.02 }} whileTap={{ scale:0.97 }}
       className="w-full text-left p-4 rounded-xl transition-all flex items-start gap-4"
       style={{
-        background: selected ? 'rgba(234, 82, 52, 0.12)' : '#242424',
+        background: selected ? 'rgba(226, 74, 43, 0.6)' : '#242424',
         border: `1px solid ${selected ? 'rgba(234, 82, 52, 0.45)' : 'rgba(234, 82, 52, 0.25)'}`,
         boxShadow: selected ? '0 0 16px rgba(234, 82, 52, 0.15)' : 'none',
       }}>
       
       <div className="flex-shrink-0">
         <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl"
-          style={{ background: selected ? 'rgba(234, 82, 52, 0.20)' : '#2a2a2a' }}>
+          style={{ background: selected ? 'rgba(234, 82, 52, 0.65)' : '#2a2a2a' }}>
           {icon}
         </div>
       </div>
@@ -357,7 +357,7 @@ function TopupPageInner() {
   }, [vouchers, pageType]);
 
   return (
-    <div className="min-h-screen" style={{ background: '#1a1a1a' }}>
+    <div className="min-h-screen" style={{ background: '#0e0d0d' }}>
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
         {/* Header with gradient */}
         <div className="relative overflow-hidden rounded-2xl p-6" style={{
@@ -386,14 +386,14 @@ function TopupPageInner() {
               className="px-5 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2"
               style={pageType === t
                 ? { background: '#ea5234', color: 'white', boxShadow: '0 4px 12px rgba(234, 82, 52, 0.4)' }
-                : { background: '#2a2a2a', border: '1px solid rgba(234, 82, 52, 0.25)', color: '#b4b4b4' }}>
+                : { background: '#201d1d', border: '1px solid rgba(234, 82, 52, 0.25)', color: '#b4b4b4' }}>
               <span>{PAGE_CONFIG[t].icon}</span>
               {PAGE_CONFIG[t].title}
             </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 bg-[#0e0d0d] p-5 rounded-2xl" style={{ border: '1px solid rgba(234, 82, 52, 0.25)' }}>
           {/* Left: Input + Operator select */}
           <div className="lg:col-span-2 space-y-4">
             {/* Input number */}

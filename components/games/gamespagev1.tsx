@@ -1,3 +1,4 @@
+//dashboard/games/page.tsx - Halaman utama untuk menampilkan daftar game dengan fitur pencarian, filter, dan pagination
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
@@ -92,7 +93,7 @@ export default function GamesPage() {
     <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-black" style={{ color: '#ea5234' }}> Games & Layanan Digital</h1>
+        <h1 className="text-2xl font-black" style={{ color: '#ea5234' }}>🎮 Games & Layanan Digital</h1>
         <p className="text-slate-400 mt-1 text-sm">{total} produk tersedia</p>
       </div>
 
@@ -149,7 +150,7 @@ export default function GamesPage() {
               boxShadow: `0 4px 12px rgba(234, 82, 52, 0.35)`
             } : {}}
           >
-            {/* <span>{cat.icon}</span> */}
+            <span>{cat.icon}</span>
             {cat.name}
           </Button>
         ))}
