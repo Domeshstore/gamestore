@@ -7,6 +7,8 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { promoAPI } from '@/lib/api/client';
 import { formatCurrency } from '@/lib/utils/format';
+import toast from 'react-hot-toast'; // ✅ TAMBAHKAN IMPORT INI
+
 interface Promo {
   _id: string;
   name: string;
@@ -46,12 +48,10 @@ export default function PromoBanner({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [paused, setPaused] = useState(false);
-const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     const fetchPromos = async () => {
       try {
-        // Fetch active promos from API
         const res = await promoAPI.getAll({ 
           isActive: true,
           limit: limit 
@@ -60,7 +60,6 @@ const [imgError, setImgError] = useState(false);
         setPromos(activePromos);
       } catch (error) {
         console.error('Failed to load promos:', error);
-        // Use fallback promos if API fails
         setPromos(getFallbackPromos());
       } finally {
         setLoading(false);
@@ -160,8 +159,6 @@ const [imgError, setImgError] = useState(false);
 
   if (promos.length === 0) return null;
 
-  const currentPromo = promos[currentIndex];
-
   // Single promo mode (no carousel)
   if (promos.length === 1) {
     return <SinglePromoBanner promo={promos[0]} className={className} />;
@@ -245,8 +242,7 @@ function SinglePromoBanner({ promo, className = '' }: { promo: Promo; className?
   );
 }
 
-// components/ui/PromoBanner.tsx - update bagian PromoContent
-
+// Promo Content Component
 function PromoContent({ promo }: { promo: Promo }) {
   const [imgError, setImgError] = useState(false);
   const discountText = promo.type === 'percentage' 
