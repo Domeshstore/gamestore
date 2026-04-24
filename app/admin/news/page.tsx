@@ -176,7 +176,7 @@ export default function AdminNewsPage() {
       {/* Preview Modal */}
       <Modal open={!!preview} title={<span style={{color:'white',fontWeight:900}}>👁️ Preview</span>}
         onCancel={()=>setPreview(null)} footer={null} width={700}
-        styles={{content:{background:'oklch(0.27 0.01 17.95)',border:'1px solid oklch(0.35 0.02 34.90)'},header:{background:'oklch(0.27 0.01 17.95)'}}}>
+        style={{ top: 20 }}>
         {preview && (
           <div>
             {preview.coverImage && <img src={preview.coverImage} alt="" className="w-full h-48 object-cover rounded-xl mb-4" />}
