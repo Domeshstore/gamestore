@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Card, Table, Button, Modal, Form, InputNumber, DatePicker, Switch, Tag, Space, Row, Col, Typography, Select } from 'antd';
+import { Card, Table, Button, Modal, Form, DatePicker, Switch, Tag, Space, Row, Col, Typography, Select, InputNumberProps } from 'antd';
 import { ThunderboltOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { flashSaleAPI, gamesAPI } from '@/lib/api/client';
@@ -8,6 +8,7 @@ import apiClient from '@/lib/api/client';
 import { formatCurrency } from '@/lib/utils/format';
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
+import { InputNumber } from 'antd';
 
 const { Title, Text } = Typography;
 const cs = { background:'oklch(0.27 0.01 17.95)', border:'1px solid oklch(0.32 0.02 34.90)', borderRadius:16 };
@@ -22,7 +23,11 @@ export default function FlashSalePage() {
   const [saving,   setSaving]   = useState(false);
   const [selVoucher,setSelVoucher]=useState<string>('');
   const [form]    = Form.useForm();
-
+ const formatter: InputNumberProps<number>['formatter'] = (value) => {
+  const [start, end] = `Rp{value}`.split('.') || [];
+  const v = `${start}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return `$ ${end ? `${v}.${end}` : `${v}`}`;
+};
   useEffect(() => {
     fetchSales();
     // Fetch vouchers for picker
@@ -89,6 +94,8 @@ export default function FlashSalePage() {
     )},
   ];
 
+ 
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between flex-wrap gap-4">
@@ -115,19 +122,44 @@ export default function FlashSalePage() {
         <Table dataSource={sales} columns={cols} rowKey="_id" loading={loading} size="middle" pagination={{pageSize:15}} scroll={{x:800}} />
       </Card>
 
-      <Modal open={modal} title={<span style={{color:'white',fontWeight:900}}>⚡ Tambah Flash Sale</span>}
+      <Modal 
+      open={modal} 
+      title={<span 
+        style={{color:'white',fontWeight:900}}
+        >⚡ Tambah Flash Sale
+        </span>}
         onCancel={()=>setModal(false)} onOk={handleSave} okText="Simpan" cancelText="Batal" confirmLoading={saving} width={520}
-        styles={{content:{background:'oklch(0.27 0.01 17.95)',border:'1px solid oklch(0.35 0.02 34.90)'},header:{background:'oklch(0.27 0.01 17.95)'}}}>
+                style={{
+    top: 20
+  }}>
+
         <Form form={form} layout="vertical" requiredMark={false}>
           <Form.Item label={<span style={{color:'oklch(0.65 0.01 17.53)',fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em'}}>Pilih Voucher</span>} required>
-            <Select showSearch value={selVoucher} onChange={setSelVoucher} size="large"
-              placeholder="Cari voucher..." optionFilterProp="label"
+            <Select value={selVoucher} onChange={setSelVoucher} size="large"
+              placeholder="Cari voucher..." 
+              showSearch={{
+      optionFilterProp: ['label', 'otherField'],
+    }}
               options={vouchers.map(v=>({ value:v._id, label:`${v.gameId?.name??'—'} — ${v.name} (${formatCurrency(v.price)})` }))} />
           </Form.Item>
-          <Form.Item name="salePrice" label={<span style={{color:'oklch(0.65 0.01 17.53)',fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.05em'}}>Harga Flash Sale</span>} rules={[{required:true}]}>
-            <InputNumber size="large" style={{width:'100%'}} min={0}
-              formatter={v=>`Rp ${v}`.replace(/\B(?=(\d{3})+(?!\d))/g,',')}
-              parser={v=>Number(String(v).replace(/[Rp,\s]/g,''))} />
+          <Form.Item 
+          name="salePrice" 
+          label={<span style={{color:'oklch(0.65 0.01 17.53)',
+          fontSize:11,
+          fontWeight:700,
+          textTransform:'uppercase',
+          letterSpacing:'0.05em'}}
+          >
+            Harga Flash Sale
+            </span>} rules={[{required:true}]}
+            >
+            <InputNumber 
+            size="large" 
+            style={{width:'100%'}} 
+            min={0}
+            formatter={formatter}              
+            parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+/>
           </Form.Item>
           <Row gutter={12}>
             <Col span={12}>
