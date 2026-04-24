@@ -11,7 +11,7 @@ import Footer from '@/components/layout/Footer';
 import { Loader2, ArrowLeft, Clock, Eye, Share2, Calendar, Tag } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// 🔥 TEMA SAMA DENGAN TRANSACTIONS PAGE - Coral Red + Amber
+// TEMA - Coral Red + Amber
 const THEME = {
   primary: '#ea5234',
   primaryDark: '#c23d22',
@@ -25,40 +25,62 @@ const THEME = {
 };
 
 const CAT_COLORS: Record<string, string> = { 
-  promo: '#f97316',      // orange
-  update: '#3b82f6',     // blue  
-  tips: '#10b981',       // emerald
-  event: '#ec4899',      // pink
+  promo: '#f97316',
+  update: '#3b82f6',
+  tips: '#10b981',
+  event: '#ec4899',
   general: THEME.primary 
 };
 
 const CAT_LABELS: Record<string, string> = { 
-  promo: ' Promo', 
-  update: ' Update', 
-  tips: ' Tips', 
-  event: ' Event', 
-  general: ' Umum' 
+  promo: 'Promo',
+  update: 'Update',
+  tips: 'Tips',
+  event: 'Event',
+  general: 'Umum'
 };
+
+// 🔥 TAMBAHKAN INTERFACE UNTUK TYPE NEWS
+interface NewsAuthor {
+  name: string;
+  email?: string;
+}
+
+interface NewsItem {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  coverImage: string;
+  category: string;
+  tags: string[];
+  isPublished: boolean;
+  isPinned: boolean;
+  viewCount: number;
+  publishedAt: string;
+  createdAt: string;
+  author?: NewsAuthor;
+}
 
 export default function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const [news, setNews] = useState<Record<string, unknown> | null>(null);
+  const [news, setNews] = useState<NewsItem | null>(null);
   const [loading, setLoading] = useState(true);
-  const [relatedNews, setRelatedNews] = useState<Record<string, unknown>[]>([]);
+  const [relatedNews, setRelatedNews] = useState<NewsItem[]>([]);
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
         const res = await newsAPI.getBySlug(slug);
-        const data = res.data.data;
+        const data = res.data.data as NewsItem;
         setNews(data);
         
-        // Fetch related news (same category)
         if (data?.category) {
           const related = await newsAPI.getAll({ 
             category: String(data.category), 
             limit: 3,
-            exclude: data._id as string
+            exclude: data._id
           });
           setRelatedNews(related.data.data || []);
         }
@@ -74,7 +96,7 @@ export default function NewsDetailPage() {
   const share = () => {
     if (navigator.share) {
       navigator.share({ 
-        title: String(news?.title), 
+        title: news?.title || '', 
         url: window.location.href 
       });
     } else {
@@ -104,8 +126,8 @@ export default function NewsDetailPage() {
     );
   }
 
-  const cat = String(news.category || 'general');
-  const tags = (news.tags as string[]) || [];
+  const cat = news.category || 'general';
+  const tags = news.tags || [];
 
   return (
     <AntProvider>
@@ -128,9 +150,10 @@ export default function NewsDetailPage() {
               transition={{ duration: 0.5 }}
               className="mb-8"
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
-                src={String(news.coverImage)} 
-                alt={String(news.title)}
+                src={news.coverImage} 
+                alt={news.title}
                 className="w-full h-64 sm:h-80 object-cover rounded-2xl shadow-2xl"
                 style={{ border: `1px solid ${THEME.border}` }}
               />
@@ -174,7 +197,7 @@ export default function NewsDetailPage() {
 
             {/* Title - Gradient Coral to Amber */}
             <h1 className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-[#ea5234] to-[#f59e0b] bg-clip-text text-transparent mb-4">
-              {String(news.title)}
+              {news.title}
             </h1>
 
             {/* Date, Views, Author */}
@@ -183,7 +206,7 @@ export default function NewsDetailPage() {
                 <span className="flex items-center gap-1.5">
                   <Calendar className="w-3.5 h-3.5" />
                   {news.publishedAt 
-                    ? new Date(String(news.publishedAt)).toLocaleDateString('id-ID', {
+                    ? new Date(news.publishedAt).toLocaleDateString('id-ID', {
                         day: 'numeric',
                         month: 'long',
                         year: 'numeric'
@@ -192,11 +215,11 @@ export default function NewsDetailPage() {
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Eye className="w-3.5 h-3.5" /> 
-                  {Number(news.viewCount).toLocaleString('id-ID')} views
+                  {news.viewCount.toLocaleString('id-ID')} views
                 </span>
                 {news.author && (
                   <span className="flex items-center gap-1.5">
-                    oleh {(news.author as Record<string, unknown>).name as string}
+                    oleh {news.author.name}
                   </span>
                 )}
               </div>
@@ -228,7 +251,7 @@ export default function NewsDetailPage() {
               fontSize: 16
             }}
             dangerouslySetInnerHTML={{ 
-              __html: String(news.content).replace(/\n/g, '<br/>') 
+              __html: news.content.replace(/\n/g, '<br/>') 
             }}
           />
 
@@ -254,7 +277,7 @@ export default function NewsDetailPage() {
                 boxShadow: `0 4px 15px ${THEME.shadow}`
               }}
             >
-              ⚡ Top Up Sekarang
+              Top Up Sekarang
             </Link>
           </motion.div>
 
@@ -267,10 +290,10 @@ export default function NewsDetailPage() {
               className="mt-12"
             >
               <h3 className="text-white font-bold text-xl mb-4 flex items-center gap-2">
-                📖 Artikel Terkait
+                Artikel Terkait
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {relatedNews.map((item: Record<string, unknown>, idx: number) => (
+                {relatedNews.map((item: NewsItem, idx: number) => (
                   <Link key={idx} href={`/news/${item.slug}`}>
                     <div 
                       className="p-3 rounded-xl transition-all hover:-translate-y-1 hover:shadow-xl"
@@ -280,17 +303,18 @@ export default function NewsDetailPage() {
                       }}
                     >
                       {item.coverImage && (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img 
-                          src={String(item.coverImage)} 
-                          alt={String(item.title)}
+                          src={item.coverImage} 
+                          alt={item.title}
                           className="w-full h-28 object-cover rounded-lg mb-2"
                         />
                       )}
                       <p className="text-white font-semibold text-sm line-clamp-2">
-                        {String(item.title)}
+                        {item.title}
                       </p>
                       <p className="text-xs mt-1 text-slate-500">
-                        {new Date(String(item.publishedAt)).toLocaleDateString('id-ID')}
+                        {new Date(item.publishedAt).toLocaleDateString('id-ID')}
                       </p>
                     </div>
                   </Link>
