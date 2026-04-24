@@ -60,7 +60,7 @@ apiClient.interceptors.response.use(
 );
 
 export const authAPI = {
-  register: (d: { name: string; email: string; password: string; phone?: string }) => 
+  register: (d: { name: string; email: string; password: string; phone?: string; referralCode?: string }) => 
     apiClient.post('/auth/register', d),
   login: (d: { email: string; password: string }) => 
     apiClient.post('/auth/login', d),

@@ -29,9 +29,16 @@ export function useAuth() {
     }
   };
 
-  const register = async (name: string, email: string, password: string, phone?: string) => {
+  const register = async (
+    name: string, 
+    email: string, 
+    password: string, 
+    phone?: string,
+    referralCode?: string
+
+  ) => {
     try {
-      const res = await authAPI.register({ name, email, password, phone });
+      const res = await authAPI.register({ name, email, password, phone, referralCode });
       const { token, user } = res.data.data;
       store.setAuth(user, token);
       toast.success('Registrasi berhasil!');

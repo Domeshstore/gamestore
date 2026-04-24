@@ -47,7 +47,13 @@ function RegisterInner() {
   const handleSubmit = async (values: Record<string, string>) => {
     setLoading(true);
     try {
-      await register(values.name, values.email, values.password, values.phone, values.referralCode);
+      await register(
+        values.name, 
+        values.email, 
+        values.password, 
+        values.phone, 
+        values.referralCode
+      );
     } finally { setLoading(false); }
   };
 
