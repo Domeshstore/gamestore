@@ -49,12 +49,13 @@ export default function LoginPage() {
               className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
               style={{ background:'linear-gradient(135deg,#7c3aed,#4f46e5)', boxShadow:'0 8px 24px rgba(124,58,237,0.4)' }}>
             </motion.div> */}
+            <div className="w-28 h-27 rounded-2xl flex items-center justify-center mx-auto mb-4">
 <Logo></Logo>
-
+            </div>
             <Title level={3} style={{ color:'white', marginBottom:4, fontWeight:900 }}>
-              Game<span style={{ background:'linear-gradient(135deg,#ffdeac,#ffaf65)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>Voucher</span>
+              {/* Game<span style={{ background:'linear-gradient(135deg,#ffdeac,#ffaf65)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>Voucher</span> */}
             </Title>
-            <Text style={{ color:'#64748b' }}>Masuk ke akun kamu 👾</Text>
+            <Text className='font-bold' style={{ color:'#64748b' }}>Masuk ke akun kamu 👾</Text>
           </div>
 
           {/* Form card */}

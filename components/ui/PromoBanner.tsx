@@ -88,7 +88,7 @@ export default function PromoBanner({
         code: 'NEWUSER33',
         description: 'Dapatkan diskon 33% untuk transaksi pertama!',
         type: 'percentage',
-        value: 33,
+        value: 12,
         maxDiscount: 50000,
         minOrder: 0,
         scope: 'all',
@@ -103,27 +103,7 @@ export default function PromoBanner({
         isAutoApply: true,
         image: 'https://nmzg68mby1os258h.public.blob.vercel-storage.com/d182bdab47188249b6b34839fc6238e827c814ea-1920x1080-8ppUdeb85I6lb3LbyPFpN555Jj1k8V.avif',
       },
-      {
-        _id: '2',
-        name: 'Flash Sale Weekend',
-        code: 'FLASH50',
-        description: 'Diskon 50% khusus akhir pekan!',
-        type: 'percentage',
-        value: 50,
-        maxDiscount: 100000,
-        minOrder: 50000,
-        scope: 'all',
-        categories: [],
-        productIds: [],
-        usageLimit: 500,
-        usedCount: 0,
-        perUserLimit: 1,
-        startsAt: new Date().toISOString(),
-        expiresAt: null,
-        isActive: true,
-        isAutoApply: false,
-        image: 'https://nmzg68mby1os258h.public.blob.vercel-storage.com/d182bdab47188249b6b34839fc6238e827c814ea-1920x1080-8ppUdeb85I6lb3LbyPFpN555Jj1k8V.avif',
-      },
+      
     ];
   };
 

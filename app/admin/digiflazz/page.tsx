@@ -415,25 +415,23 @@ const [activeTab, setActiveTab] = useState<'balance'|'pricelist'|'transaction'|'
       </div>
 
       {/* Tabs */}
-     <Segmented
+// Di component:
+<Segmented
   value={activeTab}
   onChange={v => setActiveTab(v as typeof activeTab)}
   options={[
-    { label: '💰 Saldo',       value: 'balance' },
-    { label: '📋 Produk',      value: 'pricelist' },
-    { label: '⚡ Transaksi',    value: 'transaction' },
-    {
-      label: (
-        <Badge count={queue.length} size="small" offset={[6, -2]}>
-          <span>📦 Antrian</span>
-        </Badge>
-      ),
-      value: 'queue',
+    { label: '💰 Saldo', value: 'balance' },
+    { label: '📋 Produk', value: 'pricelist' },
+    { label: '⚡ Transaksi', value: 'transaction' },
+    { 
+      label: <Badge count={queue.length} size="small">
+        <span>📦 Antrian</span>
+      </Badge>,
+      value: 'queue' 
     },
-    { label: '🔗 Webhook', value: 'webhook' },   // <-- TAMBAHKAN INI
+    { label: '🔗 Webhook', value: 'webhook' },
   ]}
-        style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.07)' }}
-      />
+/>
 
       {/* ════════ TAB: SALDO ════════════════════════════════ */}
       {activeTab === 'balance' && (
@@ -533,7 +531,7 @@ const [activeTab, setActiveTab] = useState<'balance'|'pricelist'|'transaction'|'
           {/* Table */}
           {plLoaded && (
             <>
-              <Card style={cardStyle} bodyStyle={{ padding:0 }}>
+              <Card style={cardStyle} >
                 <Table
                   dataSource={paginated}
                   columns={productCols}
@@ -628,7 +626,7 @@ const [activeTab, setActiveTab] = useState<'balance'|'pricelist'|'transaction'|'
                 <Alert
                   type="warning"
                   showIcon={false}
-                  message={
+                  title={
                     <div className="flex items-center justify-between">
                       <div>
                         <div style={{ color:'#fbbf24', fontWeight:700 }}>Mode Testing</div>

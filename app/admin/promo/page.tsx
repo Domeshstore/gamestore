@@ -291,7 +291,7 @@ export default function AdminPromoPage() {
         />
       )}
 
-      <Card style={cardStyle} bodyStyle={{ padding:0 }}>
+      <Card style={cardStyle} title={<span style={{ color:'white', fontWeight:800 }}>📋 Daftar Promo</span>}>
         <Table dataSource={promos} columns={cols} rowKey="_id" loading={loading}
           size="middle" scroll={{ x:900 }}
           pagination={{ pageSize:15, showSizeChanger:false }}

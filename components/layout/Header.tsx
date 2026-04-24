@@ -4,10 +4,11 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { LogOut, User, ChevronDown, Shield, Coins, Menu as MenuIcon, X, Home, WifiSync, History, Gift, Phone, Gamepad2, LayoutDashboard } from 'lucide-react';
+import { LogOut, User, ChevronDown, Shield, GiftIcon, Newspaper, Coins, Menu as MenuIcon, X, Home, WifiSync, History, Gift, Phone, Gamepad2, LayoutDashboard } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import Logo from '../logo';
 
 export default function Header() {
   const { user, isAuthenticated, isAdmin } = useAuth();
@@ -42,6 +43,10 @@ export default function Header() {
     { key: '/dashboard', label: 'Home', icon: <LayoutDashboard size={18} /> },
     { key: '/dashboard/games', label: 'Games', icon: <Gamepad2 size={18} /> },
     { key: '/dashboard/topup', label: 'Pulsa & Data', icon: <WifiSync size={18} /> },
+    { key: '/dashboard/referral',      label: 'Referral',  icon: <GiftIcon size={18} /> },
+
+    { key: '/news',      label: 'News',  icon: <Newspaper size={18} /> },
+
     { key: '/dashboard/transactions', label: 'Transaksi', icon: <History size={18} /> },
   ];
 
@@ -50,6 +55,10 @@ export default function Header() {
     { key: '/dashboard', label: 'Beranda', icon: <Home size={22} />, activeIcon: <Home size={22} strokeWidth={2.5} /> },
     { key: '/dashboard/games', label: 'Games', icon: <Gamepad2 size={22} />, activeIcon: <Gamepad2 size={22} strokeWidth={2.5} /> },
     { key: '/dashboard/topup', label: 'Topup', icon: <WifiSync size={22} />, activeIcon: <WifiSync size={22} strokeWidth={2.5} /> },
+    { key: '/dashboard/referral',      label: 'Referral',  icon: <GiftIcon size={18} /> },
+
+    { key: '/news',      label: 'News',  icon: <Newspaper size={18} /> },
+
     { key: '/dashboard/transactions', label: 'Riwayat', icon: <History size={22} />, activeIcon: <History size={22} strokeWidth={2.5} /> },
     ...(isAdmin ? [{ key: '/admin', label: 'Admin', icon: <Shield size={22} />, activeIcon: <Shield size={22} strokeWidth={2.5} /> }] : [])
   ];
@@ -77,15 +86,8 @@ export default function Header() {
         <div className="flex items-center justify-between h-full px-4 md:px-6">
           {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-2 shrink-0">
-            <div className="relative w-10 h-10 md:w-14 md:h-14">
-              <Image
-                src="https://nmzg68mby1os258h.public.blob.vercel-storage.com/logo_1-jUsDzBzgtlctx4zsJ4BmfwLg3IAqG0.png"
-                alt="BANGDIM Store Logo"
-                fill
-                className="object-contain"
-                sizes="(max-width: 768px) 40px, 56px"
-                priority
-              />
+            <div className="relative ">
+              <Logo />
             </div>
             {!isMobile && (
               <span className="font-bold text-white text-xl hidden sm:block">

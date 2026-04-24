@@ -169,6 +169,40 @@ export const promoAPI = {
   delete:     (id: string) => apiClient.delete(`/promo/${id}`),
 };
 
+export const paymentAPI = {
+  createSnap:   (transactionId: string) => apiClient.post('/payment/create-snap', { transactionId }),
+  getStatus:    (txId: string) => apiClient.get(`/payment/status/${txId}`),
+  cancelPayment:(txId: string) => apiClient.post(`/payment/cancel/${txId}`),
+};
+
+export const referralAPI = {
+  getMy:        ()                            => apiClient.get('/referral/my'),
+  getHistory:   ()                            => apiClient.get('/referral/history'),
+  validateCode: (code: string)                => apiClient.post('/referral/validate', { code }),
+};
+
+export const priceSyncAPI = {
+  syncAll:     (d: { margin?: number; dryRun?: boolean }) => apiClient.post('/admin/sync-prices', d),
+  syncStatus:  ()                                          => apiClient.get('/admin/sync-status'),
+  syncOne:     (id: string, margin?: number)               => apiClient.post(`/admin/sync-voucher/${id}`, { margin }),
+};
+
+
+export const flashSaleAPI = {
+  getAll:      () => apiClient.get('/admin/flash-sales'),
+  setFlashSale:(voucherId: string, d: Record<string,unknown>) => apiClient.patch(`/admin/flash-sale/${voucherId}`, d),
+};
+
+export const newsAPI = {
+  getAll:   (p?: Record<string,unknown>) => apiClient.get('/news', { params: p }),
+  getBySlug:(slug: string)               => apiClient.get(`/news/${slug}`),
+  // Admin
+  adminAll: (p?: Record<string,unknown>) => apiClient.get('/news/admin/all', { params: p }),
+  create:   (d: Record<string,unknown>)  => apiClient.post('/news', d),
+  update:   (id: string, d: Record<string,unknown>) => apiClient.put(`/news/${id}`, d),
+  delete:   (id: string)                 => apiClient.delete(`/news/${id}`),
+};
+
 export const reviewsPublicAPI = {
   get: () => apiClient.get('/transactions/public-reviews'),
 };

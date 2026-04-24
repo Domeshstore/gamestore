@@ -24,12 +24,12 @@ export default function PromoModal() {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-4 w-[90%] max-w-md relative">
+      <div className=" bg-stone-900 rounded-xl p-4 w-[90%] max-w-md relative">
         
         {/* Close button */}
         <button
           onClick={() => setOpen(false)}
-          className="absolute top-2 right-2 text-black"
+          className="absolute top-2 right-2 text-white hover:text-gray-300 transition-colors"
         >
           ✕
         </button>
@@ -39,10 +39,10 @@ export default function PromoModal() {
 
         {/* CTA */}
         <button
-          className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg"
+          className="mt-4 w-full bg-orange-800 text-white py-2 rounded-lg"
           onClick={() => {
             setOpen(false);
-            window.location.href = "/topup";
+            window.location.href = "/dashboard/games";
           }}
         >
           Klaim Promo Sekarang

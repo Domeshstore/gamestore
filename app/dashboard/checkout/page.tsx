@@ -13,18 +13,20 @@ import AuthGuard from '@/components/auth/AuthGuard';
 import {
   QrCode, Building2, Wallet, Coins, ArrowRight, Loader2,
   ChevronLeft, CheckCircle, XCircle, Tag, Phone, Mail,
-  MessageCircle, AlertCircle, Info, Star,
+  MessageCircle, AlertCircle, Info, Star, GiftIcon, NetworkIcon
 } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 
-type PaymentMethod = 'qris' | 'bank_transfer' | 'e-wallet' | 'reward_points';
+type PaymentMethod = 'qris' | 'bank_transfer' | 'e-wallet' | 'midtrans' | 'reward_points';
 
 const PAYMENT_METHODS: { value: PaymentMethod; label: string; icon: React.ElementType; desc: string }[] = [
   { value:'qris',         label:'QRIS',         icon:QrCode,    desc:'Scan QR — semua e-wallet & m-banking' },
   { value:'bank_transfer',label:'Transfer Bank', icon:Building2, desc:'BCA, Mandiri, BNI, BRI' },
   { value:'e-wallet',     label:'E-Wallet',       icon:Wallet,    desc:'GoPay, OVO, Dana, ShopeePay' },
+  { value:'midtrans',     label:'Midtrans',       icon:NetworkIcon,    desc:'Payment Gateway' },
   { value:'reward_points',label:'Reward Points',  icon:Coins,     desc:'Gunakan poin kamu' },
+
 ];
 
 const ss = { 
@@ -298,7 +300,7 @@ export default function CheckoutPage() {
                 const active   = paymentMethod === value;
                 return (
                   <button key={value} disabled={disabled}
-                    onClick={() => setPaymentMethod(value)}
+                    onClick={() => setPaymentMethod(value as any)}
                     className="flex items-center gap-3 p-3.5 rounded-xl text-left transition-all disabled:opacity-40"
                     style={{
                       background: active ? 'rgba(234, 82, 52, 0.12)' : '#242424',

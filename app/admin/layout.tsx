@@ -8,6 +8,7 @@ import {
   DashboardOutlined, ShoppingOutlined, TagsOutlined, TransactionOutlined,
   UserOutlined, SettingOutlined, ThunderboltOutlined, LogoutOutlined,
   BellOutlined, MenuFoldOutlined, MenuUnfoldOutlined, AppstoreOutlined, GiftOutlined,
+  FileTextOutlined, SyncOutlined,
 } from '@ant-design/icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import AntProvider from '@/components/providers/AntProvider';
@@ -27,6 +28,9 @@ const NAV_ITEMS = [
   { key: '/admin/vouchers',     icon: <TagsOutlined />,         label: 'Vouchers' },
   { key: '/admin/users',        icon: <UserOutlined />,         label: 'Users' },
   { key: '/admin/promo',         icon: <GiftOutlined />,         label: 'Promo & Diskon' },
+  { key: '/admin/news',          icon: <FileTextOutlined />,      label: 'News' },
+  { key: '/admin/price-sync',    icon: <SyncOutlined />,          label: 'Sinkron Harga' },
+  { key: '/admin/flash-sale',    icon: <ThunderboltOutlined />,   label: 'Flash Sale' },
   { key: '/admin/settings',     icon: <SettingOutlined />,      label: 'Pengaturan' },
 ];
 

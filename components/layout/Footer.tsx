@@ -137,6 +137,8 @@ export default function Footer() {
                 { href: '/dashboard', label: 'Home' },
                 { href: '/dashboard/games', label: 'Games' },
                 { href: '/dashboard/transactions', label: 'Transaksi' },
+                { href: '/news', label: 'News' },
+                { href: '/dashboard/referral', label: 'Referral' },
                 { href: '/dashboard/profile', label: 'Profil' },
               ].map((l) => (
                 <li key={l.href}>
@@ -156,6 +158,8 @@ export default function Footer() {
                 { href: '/about', label: 'Tentang Kami' },
                 { href: '/how-to-buy', label: 'Cara Pembelian' },
                 { href: '/faq', label: 'FAQ' },
+                { href: '/news', label: 'News' },
+                { href: '/dashboard/referral', label: 'Referral' },
                 { href: '/contact', label: 'Hubungi Kami' },
                 { href: '/privacy', label: 'Kebijakan Privasi' },
               ].map((item) => (
