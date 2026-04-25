@@ -9,11 +9,12 @@ import { cn } from '@/lib/utils/format';
 import toast from 'react-hot-toast';
 
 // Type definition untuk form
+// Update interface FormData
 type FormData = {
   gameId: string;
   name: string;
   code: string;
-  description: string;
+  description: string;  // Tetap string untuk form
   price: number;
   originalPrice: number;
   rewardPoints: number;
@@ -27,11 +28,12 @@ type FormData = {
   sortOrder: number;
 };
 
+// EMPTY tetap string kosong (bukan undefined)
 const EMPTY: FormData = {
   gameId: '',
   name: '',
   code: '',
-  description: '',
+  description: '',  // ✅ string kosong
   price: 0,
   originalPrice: 0,
   rewardPoints: 0,
@@ -85,27 +87,30 @@ export default function AdminVouchersPage() {
     setShowModal(true);
   };
 
-  const openEdit = (v: Voucher) => {
-    setEditV(v);
-    setForm({
-      gameId: typeof v.gameId === 'string' ? v.gameId : (v.gameId as Game)._id,
-      name: v.name,
-      code: v.code,
-      description: v.description,
-      price: v.price,
-      originalPrice: v.originalPrice,
-      rewardPoints: v.rewardPoints,
-      provider: v.provider,
-      providerCode: v.providerCode,
-      type: v.type,
-      image: (v as unknown as { image?: string }).image || '',
-      isActive: v.isActive,
-      isFeatured: v.isFeatured,
-      stock: v.stock,
-      sortOrder: v.sortOrder,
-    });
-    setShowModal(true);
-  };
+ // app/admin/vouchers/page.tsx
+
+// Di openEdit function:
+const openEdit = (v: Voucher) => {
+  setEditV(v);
+  setForm({
+    gameId: typeof v.gameId === 'string' ? v.gameId : (v.gameId as Game)._id,
+    name: v.name,
+    code: v.code,
+    description: v.description || '',  // 🔥 FIX: Gunakan fallback empty string
+    price: v.price,
+    originalPrice: v.originalPrice,
+    rewardPoints: v.rewardPoints,
+    provider: v.provider,
+    providerCode: v.providerCode,
+    type: v.type,
+    image: (v as unknown as { image?: string }).image || '',
+    isActive: v.isActive,
+    isFeatured: v.isFeatured,
+    stock: v.stock,
+    sortOrder: v.sortOrder,
+  });
+  setShowModal(true);
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
