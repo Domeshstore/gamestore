@@ -181,12 +181,24 @@ export const referralAPI = {
   validateCode: (code: string)                => apiClient.post('/referral/validate', { code }),
 };
 
-export const priceSyncAPI = {
-  syncAll:     (d: { margin?: number; dryRun?: boolean }) => apiClient.post('/admin/sync-prices', d),
-  syncStatus:  ()                                          => apiClient.get('/admin/sync-status'),
-  syncOne:     (id: string, margin?: number)               => apiClient.post(`/admin/sync-voucher/${id}`, { margin }),
-};
+// lib/api/client.ts - Tambahkan ini ke priceSyncAPI
 
+export const priceSyncAPI = {
+  syncAll: (d: { margin?: number; dryRun?: boolean }) => 
+    apiClient.post('/admin/sync-prices', d),
+  syncStatus: () => apiClient.get('/admin/sync-status'),
+  syncOne: (id: string, margin?: number) => 
+    apiClient.post(`/admin/sync-voucher/${id}`, { margin }),
+  
+  // 🔥 TAMBAHKAN INI UNTUK V2
+  getComparison: () => apiClient.get('/admin/sync-comparison'),
+  syncSpecific: (d: { voucherIds: string[]; margin?: number; dryRun?: boolean }) => 
+    apiClient.post('/admin/sync-specific', d),
+  updateMargin: (voucherId: string, marginPercent: number) => 
+    apiClient.patch(`/admin/voucher-margin/${voucherId}`, { marginPercent }),
+  bulkUpdateMargins: (voucherIds: string[], marginPercent: number) => 
+    apiClient.post('/admin/voucher-margin/bulk', { voucherIds, marginPercent }),
+};
 
 export const flashSaleAPI = {
   getAll:      () => apiClient.get('/admin/flash-sales'),

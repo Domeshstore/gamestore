@@ -34,12 +34,55 @@ export interface Game {
   sortOrder: number;
   tags: string[]; vouchers?: Voucher[]; createdAt: string;
 }
+// types/voucher.ts
+
+export interface FlashSale {
+  isActive: boolean;
+  salePrice: number;
+  startsAt: string | null;
+  endsAt: string | null;
+  stock: number;
+  soldCount: number;
+}
+
 export interface Voucher {
-  _id: string; gameId: string|Game; name: string; code: string;
-  description: string; price: number; originalPrice: number;
-  rewardPoints: number; provider: 'digiflazz'|'apigames';
-  providerCode: string; type: string;
-  isActive: boolean; isFeatured: boolean; stock: number; sortOrder: number;
+  _id: string;
+  gameId: string | { _id: string; name: string; slug: string };
+  name: string;
+  code: string;
+  description?: string;
+  image?: string;
+  price: number;
+  originalPrice: number;
+  rewardPoints: number;
+  digiflazzPrice: number;
+  marginPercent: number;
+  priceLastSyncedAt: string | null;
+  priceAutoSync: boolean;
+  flashSale: FlashSale;
+  provider: 'digiflazz' | 'apigames';
+  providerCode: string;
+  type: 'diamond' | 'coin' | 'subscription' | 'item' | 'other' | 'pulsa' | 'paket_data' | 'pln';
+  validityDays: number;
+  isActive: boolean;
+  isFeatured: boolean;
+  stock: number;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+  effectivePrice?: number;
+}
+
+// Untuk response API yang paginated
+export interface VoucherResponse {
+  success: boolean;
+  data: Voucher[];
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
 }
 export type TransactionStatus =
   'waiting_payment'|'paid'|'processing'|'success'|'failed'|'cancelled'|'refunded';

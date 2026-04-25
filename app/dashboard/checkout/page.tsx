@@ -47,6 +47,8 @@ function StepBadge({ n, label, done }: { n: number; label: string; done?: boolea
   );
 }
 
+// ... imports tetap sama ...
+
 export default function CheckoutPage() {
   const router = useRouter();
   const { game, voucher, targetId, serverId, targetUsername, paymentMethod, setPaymentMethod, clear } = useCheckoutStore();
@@ -71,19 +73,34 @@ export default function CheckoutPage() {
       return;
     }
     settingsAPI.getApp().then(r => setSettings(r.data.data)).catch(() => {});
-    // Pre-fill auto-apply promo for new users
-    promoAPI.getPublic().then(r => {
-      const auto = (r.data.data || []).find((p: { isAutoApply:boolean; type:string }) => p.isAutoApply && p.type === 'first_transaction');
-      if (auto) setPromoCode(auto.code);
-    }).catch(() => {});
   }, []);
 
   if (!game || !voucher || !targetId) return null;
 
-  const basePrice  = voucher.price;
-  const finalPrice = promoResult ? promoResult.finalPrice : basePrice;
-  const discount   = promoResult ? promoResult.discount : 0;
-  const canUsePoints = (user?.rewardPoints ?? 0) >= finalPrice;
+  // 🔥 PERBAIKAN: Hitung harga dengan benar
+  // 1. Ambil harga efektif (bisa dari flash sale atau harga normal)
+  const getEffectivePrice = () => {
+    // Jika ada flash sale aktif
+    if (voucher.flashSale?.isActive && voucher.flashSale?.salePrice > 0) {
+      const now = new Date();
+      const startsAt = voucher.flashSale.startsAt ? new Date(voucher.flashSale.startsAt) : null;
+      const endsAt = voucher.flashSale.endsAt ? new Date(voucher.flashSale.endsAt) : null;
+      
+      if ((!startsAt || startsAt <= now) && (!endsAt || endsAt > now)) {
+        return voucher.flashSale.salePrice;
+      }
+    }
+    return voucher.price;
+  };
+
+  const effectivePrice = getEffectivePrice();
+  const originalPrice = voucher.originalPrice || voucher.price; // Harga asli sebelum diskon apapun
+  
+  // Perhitungan promo berdasarkan effectivePrice (bukan originalPrice)
+  const finalPriceAfterPromo = promoResult ? promoResult.finalPrice : effectivePrice;
+  const discountFromPromo = promoResult ? promoResult.discount : 0;
+  
+  const canUsePoints = (user?.rewardPoints ?? 0) >= finalPriceAfterPromo;
 
   // Determine product type from game category
   const getProductType = () => {
@@ -114,7 +131,7 @@ export default function CheckoutPage() {
       const res = await promoAPI.validate({
         code:      promoCode.trim(),
         userId:    user?.id,
-        amount:    basePrice,
+        amount:    effectivePrice,  // 🔥 Gunakan effectivePrice (harga setelah flash sale)
         category:  game.category,
         productId: game._id,
       });
@@ -139,7 +156,7 @@ export default function CheckoutPage() {
     try {
       const res = await transactionsAPI.create({
         provider:       voucher.provider,
-        productType:    getProductType(), // Gunakan fungsi getProductType()
+        productType:    getProductType(),
         gameCode:       game.gameCode,
         gameName:       game.name,
         voucherCode:    voucher.providerCode,
@@ -147,13 +164,13 @@ export default function CheckoutPage() {
         targetId,
         targetUsername,
         serverId,
-        price:          finalPrice,
-        originalPrice:  basePrice,
-        discountAmount: discount,
+        price:          paymentMethod === 'reward_points' ? 0 : finalPriceAfterPromo,
+        originalPrice:  effectivePrice,  // Simpan harga sebelum promo
+        discountAmount: discountFromPromo,
         promoId:        promoResult?.promoId,
         promoCode:      promoResult ? promoCode : '',
         paymentMethod,
-        rewardPointsUsed: paymentMethod === 'reward_points' ? finalPrice : 0,
+        rewardPointsUsed: paymentMethod === 'reward_points' ? finalPriceAfterPromo : 0,
         contactWhatsapp: whatsapp,
         contactEmail:    email,
       });
@@ -197,17 +214,26 @@ export default function CheckoutPage() {
                 </div>
               </div>
               <div className="text-right shrink-0">
-                <div style={{ color: '#ea5234', fontWeight: 900, fontSize: 18 }}>{formatCurrency(basePrice)}</div>
-                {voucher.originalPrice > basePrice && (
+                {/* 🔥 Tampilkan harga dengan coret jika ada diskon */}
+                {(effectivePrice < originalPrice || discountFromPromo > 0) && (
                   <div style={{ color: '#b4b4b4', fontSize: 12, textDecoration: 'line-through' }}>
-                    {formatCurrency(voucher.originalPrice)}
+                    {formatCurrency(originalPrice)}
+                  </div>
+                )}
+                <div style={{ color: '#ea5234', fontWeight: 900, fontSize: 18 }}>
+                  {formatCurrency(effectivePrice)}
+                </div>
+                {/* Tampilkan informasi flash sale */}
+                {voucher.flashSale?.isActive && voucher.flashSale.salePrice > 0 && (
+                  <div style={{ color: '#f59e0b', fontSize: 11, fontWeight: 700 }}>
+                    🔥 Flash Sale!
                   </div>
                 )}
               </div>
             </div>
           </div>
 
-          {/* ── KONTAK UNTUK NOTIFIKASI ── */}
+          {/* ── KONTAK UNTUK NOTIFIKASI ── (sama seperti sebelumnya) */}
           <div className="p-5 rounded-2xl" style={ss}>
             <StepBadge n={2} label="Kontak untuk Notifikasi" />
             <div className="p-3 rounded-xl mb-4 flex items-start gap-2"
@@ -242,7 +268,7 @@ export default function CheckoutPage() {
             )}
           </div>
 
-          {/* ── KODE PROMO ── */}
+          {/* ── KODE PROMO ── (sama seperti sebelumnya) */}
           <div className="p-5 rounded-2xl" style={ss}>
             <StepBadge n={3} label="Kode Promo (Opsional)" />
 
@@ -291,7 +317,7 @@ export default function CheckoutPage() {
             )}
           </div>
 
-          {/* ── METODE PEMBAYARAN ── */}
+          {/* ── METODE PEMBAYARAN ── (sama seperti sebelumnya) */}
           <div className="p-5 rounded-2xl" style={ss}>
             <StepBadge n={4} label="Metode Pembayaran" />
             <div className="grid grid-cols-2 gap-2.5">
@@ -328,28 +354,55 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* ── RINCIAN HARGA ── */}
+          {/* ── RINCIAN HARGA (DIPERBAIKI) ── */}
           <div className="p-5 rounded-2xl" style={ss}>
             <p style={{ color: '#b4b4b4', fontWeight: 700, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12 }}>
               Rincian Pembayaran
             </p>
             <div className="space-y-2.5 text-sm">
-              {[
-                ['Harga Voucher',    formatCurrency(basePrice)],
-                ...(voucher.originalPrice > basePrice ? [['Diskon Produk',`-${formatCurrency(voucher.originalPrice - basePrice)}`]] : []),
-                ...(discount > 0 ? [[`Promo (${promoCode})`, `-${formatCurrency(discount)}`]] : []),
-                ...(paymentMethod === 'reward_points' ? [['Reward Points Digunakan', `-${formatCurrency(finalPrice)}`]] : []),
-              ].map(([l, v]) => (
-                <div key={l} className="flex justify-between">
-                  <span style={{ color: '#b4b4b4' }}>{l}</span>
-                  <span style={{ color: v.startsWith('-') ? '#10b981' : '#f8d9b9', fontWeight: 600 }}>{v}</span>
+              {/* Harga asli (dengan coret jika ada diskon) */}
+              <div className="flex justify-between">
+                <span style={{ color: '#b4b4b4' }}>Harga Voucher</span>
+                <div className="text-right">
+                  {(effectivePrice < originalPrice) && (
+                    <span style={{ color: '#b4b4b4', fontSize: 12, textDecoration: 'line-through', marginRight: 8 }}>
+                      {formatCurrency(originalPrice)}
+                    </span>
+                  )}
+                  <span style={{ color: '#f8d9b9', fontWeight: 600 }}>{formatCurrency(effectivePrice)}</span>
                 </div>
-              ))}
+              </div>
+              
+              {/* Diskon Flash Sale (jika ada) */}
+              {effectivePrice < originalPrice && (
+                <div className="flex justify-between">
+                  <span style={{ color: '#b4b4b4' }}>Diskon Flash Sale</span>
+                  <span style={{ color: '#10b981', fontWeight: 600 }}>-{formatCurrency(originalPrice - effectivePrice)}</span>
+                </div>
+              )}
+              
+              {/* Diskon Promo */}
+              {discountFromPromo > 0 && (
+                <div className="flex justify-between">
+                  <span style={{ color: '#b4b4b4' }}>Diskon Promo ({promoCode})</span>
+                  <span style={{ color: '#10b981', fontWeight: 600 }}>-{formatCurrency(discountFromPromo)}</span>
+                </div>
+              )}
+              
+              {/* Reward Points */}
+              {paymentMethod === 'reward_points' && (
+                <div className="flex justify-between">
+                  <span style={{ color: '#b4b4b4' }}>Reward Points Digunakan</span>
+                  <span style={{ color: '#10b981', fontWeight: 600 }}>-{formatCurrency(finalPriceAfterPromo)}</span>
+                </div>
+              )}
+              
+              {/* Total */}
               <div className="flex justify-between font-black text-base pt-2"
                 style={{ borderTop: '1px solid rgba(234, 82, 52, 0.25)' }}>
                 <span style={{ color: '#f8d9b9' }}>Total Bayar</span>
                 <span style={{ color: '#ea5234', fontSize: 20 }}>
-                  {paymentMethod === 'reward_points' ? 'Gratis' : formatCurrency(finalPrice)}
+                  {paymentMethod === 'reward_points' ? 'Gratis' : formatCurrency(finalPriceAfterPromo)}
                 </span>
               </div>
             </div>
