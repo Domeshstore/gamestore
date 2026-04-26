@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { gamesAPI, settingsAPI, promoAPI, authAPI,  reviewsPublicAPI } from '@/lib/api/client';
 import { Game, AppSetting, Category, Voucher } from '@/types';
-import BannerCarousel from '@/components/ui/Banner2';
+import BannerCarousel from '@/components/ui/Banner3';
 import { useCheckoutStore } from '@/lib/store/useCheckoutStore';
 import { useRouter } from 'next/navigation';
 import { formatCurrency } from '@/lib/utils/format';
@@ -217,13 +217,28 @@ useEffect(() => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#0d0d0d]">
-      <div className="max-w-7xl mx-auto py-2 space-y-10">
+    <div className="min-h-screen relative bg-gradient-to-b from-[rgb(10,10,10)] to-[#0d0d0d] overflow-hidden">
+     <div className="absolute top-0 left-0 w-[400px] h-[400px] blur-[120px] opacity-30" />
+      <div className="absolute top-20 right-0 w-[400px] h-[400px] blur-[120px] opacity-20" />
 
-        {/* ── BANNER CAROUSEL ── */}
-        {settings?.banners && settings.banners.length > 0 && (
-          <section>
-            <BannerCarousel banners={settings.banners} interval={5000} />
+      <div className="relative max-w-7xl mx-auto pt-6 md:pt-10 pb-10 space-y-14">
+
+
+      {/* 🎬 CAROUSEL */}
+        {settings?.banners && (
+          <section className="relative overflow-hidden">
+
+            {/* glow behind carousel */}
+            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#ea5234]/10 to-transparent blur-3xl opacity-40" />
+
+            <BannerCarousel
+              banners={settings.banners}
+              interval={5000}
+              className="px-2 md:px-0"
+            />
+
+            {/* bottom fade */}
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none" />
           </section>
         )}
         

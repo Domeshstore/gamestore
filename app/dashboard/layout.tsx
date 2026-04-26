@@ -9,7 +9,7 @@ const ubuntu = Ubuntu({subsets:['latin'],variable:'--font-ubuntu',weight:'400'})
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <AntProvider>
-      <div className="min-h-screen flex flex-col" style={{ background: '#0e0d0de1' }}>
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-[rgb(10,10,10)] to-[#0d0d0d]" >
         <Header />
         <PromoModal />
         <main className="flex-1">{children}</main>
