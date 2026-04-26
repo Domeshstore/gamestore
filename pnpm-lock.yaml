@@ -35,6 +35,9 @@ importers:
       date-fns:
         specifier: ^3.3.0
         version: 3.6.0
+      dayjs:
+        specifier: ^1.11.20
+        version: 1.11.20
       framer-motion:
         specifier: ^12.38.0
         version: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
