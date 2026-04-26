@@ -193,11 +193,11 @@ const openEdit = (v: Voucher) => {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         {(v as unknown as { image?: string }).image
-                          ? <img src={(v as unknown as { image?: string }).image} alt={v.name} className="w-8 h-8 rounded-lg object-cover" />
-                          : <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-xs">
-                              {v.type === 'diamond' ? '💎' : v.type === 'subscription' ? '👑' : '🪙'}
-                            </div>
-                        }
+  ? <img src={(v as unknown as { image?: string }).image} alt={v.name} className="w-8 h-8 rounded-lg object-cover" />
+  : <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-xs">
+      {v.type === 'diamond' ? '💎' : v.type === 'subscription' ? '👑' : '🪙'}
+    </div>
+}
                         <div>
                           <p className="text-white text-sm font-medium">{v.name}</p>
                           {v.isFeatured && <span className="text-[10px] bg-yellow-500/10 text-yellow-400 px-1.5 py-0.5 rounded">Terlaris</span>}

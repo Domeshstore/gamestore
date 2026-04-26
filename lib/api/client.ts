@@ -191,7 +191,10 @@ export const priceSyncAPI = {
     apiClient.post(`/admin/sync-voucher/${id}`, { margin }),
   
   // 🔥 TAMBAHKAN INI UNTUK V2
-  getComparison: () => apiClient.get('/admin/sync-comparison'),
+  getComparison: () => apiClient.get('/admin/price-comparison'),
+  applySync:      (d: { voucherIds?: string[]; marginOverrides?: Record<string,number>; defaultMargin?: number; dryRun?: boolean }) => apiClient.post('/admin/apply-sync', d),
+  updateMargins:  (updates: { _id: string; marginPercent: number }[]) => 
+    apiClient.post('/admin/update-margins', { updates }),
   syncSpecific: (d: { voucherIds: string[]; margin?: number; dryRun?: boolean }) => 
     apiClient.post('/admin/sync-specific', d),
   updateMargin: (voucherId: string, marginPercent: number) => 
