@@ -118,7 +118,7 @@ export default function FlashSalePage() {
         </div>
       </Card>
 
-      <Card style={cs} bodyStyle={{padding:0}}>
+      <Card style={cs} >
         <Table dataSource={sales} columns={cols} rowKey="_id" loading={loading} size="middle" pagination={{pageSize:15}} scroll={{x:800}} />
       </Card>
 

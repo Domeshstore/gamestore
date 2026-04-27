@@ -17,6 +17,22 @@ export const metadata: Metadata = {
   },
   description: 'Platform top up voucher game terpercaya. Mobile Legends, Free Fire, PUBG, Genshin Impact, dan banyak lagi.',
   keywords: 'top up game, voucher game, mobile legends, free fire, pubg',
+  openGraph: {
+    title: 'BANGDIM Store — Top Up Game Terpercaya',
+    description: 'Platform top up voucher game terpercaya. Mobile Legends, Free Fire, PUBG, Genshin Impact, dan banyak lagi.',      
+    url: 'https://domesh.pro',
+    siteName: 'BANGDIM Store',
+    images: [
+      {
+        url: 'https://domesh.pro/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'BANGDIM Store', 
+      },
+    ],
+    locale: 'id_ID',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

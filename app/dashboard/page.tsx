@@ -217,7 +217,7 @@ useEffect(() => {
   );
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-[rgb(10,10,10)] to-[#0d0d0d] overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden">
      <div className="absolute top-0 left-0 w-[400px] h-[400px] blur-[120px] opacity-30" />
       <div className="absolute top-20 right-0 w-[400px] h-[400px] blur-[120px] opacity-20" />
 
@@ -229,7 +229,7 @@ useEffect(() => {
           <section className="relative overflow-hidden">
 
             {/* glow behind carousel */}
-            <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#ea5234]/10 to-transparent blur-3xl opacity-40" />
+            <div className=" inset-0 -z-10  blur-3xl " />
 
             <BannerCarousel
               banners={settings.banners}
@@ -238,10 +238,28 @@ useEffect(() => {
             />
 
             {/* bottom fade */}
-            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-24  pointer-events-none" />
           </section>
         )}
-        
+        {/* ── FEATURED VOUCHERS (Marquee) ── */}
+        {featured.length > 0 && (
+          <section>
+            {/* <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-1.5 rounded-full bg-gradient-to-b from-[#ea5234] to-[#ea5234]/50" />
+                <span className="text-2xl">🔥</span>
+                <div>
+                  <h2 className="text-white font-black text-xl">Voucher Terlaris</h2>
+                  <p className="text-slate-500 text-xs mt-1">Pilihan paling populer</p>
+                </div>
+              </div>
+              <Link href="/dashboard/games" className="flex items-center gap-1 text-sm font-bold text-[#f8d9b9] transition-all hover:gap-2">
+                Lihat semua <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div> */}
+            <MarqueeVoucherCards vouchers={featured} onSelect={handleVoucherSelect} />
+          </section>
+        )}
         {/* ── SEARCH BAR ── */}
         <div className="max-w-2xl mx-auto">
           {/* search input component tetap sama */}
@@ -273,7 +291,7 @@ useEffect(() => {
         </div>
 
         {/* ── FEATURES GRID ── */}
-        <section>
+        {/* <section>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
             {FEATURES.map(({ icon: Icon, title, desc, color }) => (
               <div key={title} className="bg-[#ea5234]/10 border border-[#ea5234]/20 p-5 rounded-2xl text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
@@ -285,28 +303,10 @@ useEffect(() => {
               </div>
             ))}
           </div>
-        </section>
+        </section> */}
 
         {/* ── FEATURED VOUCHERS (Marquee) ── */}
-        {featured.length > 0 && (
-          <section>
-            <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
-              <div className="flex items-center gap-3">
-                <div className="h-8 w-1.5 rounded-full bg-gradient-to-b from-[#ea5234] to-[#ea5234]/50" />
-                <span className="text-2xl">🔥</span>
-                <div>
-                  <h2 className="text-white font-black text-xl">Voucher Terlaris</h2>
-                  <p className="text-slate-500 text-xs mt-1">Pilihan paling populer</p>
-                </div>
-              </div>
-              <Link href="/dashboard/games" className="flex items-center gap-1 text-sm font-bold text-[#f8d9b9] transition-all hover:gap-2">
-                Lihat semua <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-            <MarqueeVoucherCards vouchers={featured} onSelect={handleVoucherSelect} />
-          </section>
-        )}
-
+        
         {/* ── PULSA SECTION ── */}
         {pulsaProducts.length > 0 && (
           <ProductSection

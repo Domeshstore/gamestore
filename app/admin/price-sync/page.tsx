@@ -391,7 +391,7 @@ export default function PriceSyncPageV2() {
 
       {/* Info box */}
       <Alert type="info" showIcon={false} style={{ borderRadius: 14 }}
-        message={
+        title={
           <div style={{ fontSize: 13 }}>
             💡 <strong>Nama produk di website boleh berbeda</strong> dengan nama di Digiflazz.
             Yang penting adalah <code style={{ color: '#fbbf24' }}>SKU Code (providerCode)</code> harus sama persis.
@@ -411,7 +411,7 @@ export default function PriceSyncPageV2() {
             { title: '🔄 Perlu Update',    value: summary.needsUpdateCount,  color: '#fbbf24', suffix: 'voucher' },
           ].map(({ title, value, color, suffix }) => (
             <Col key={title} xs={12} sm={8} lg={24 / 5}>
-              <Card style={cs} bodyStyle={{ padding: '14px 16px' }}>
+              <Card style={cs}>
                 <div style={{ color, fontWeight: 900, fontSize: 26, lineHeight: 1 }}>{value}</div>
                 <div style={{ color: 'oklch(0.55 0.01 17.53)', fontSize: 12, marginTop: 4 }}>{title}</div>
                 <div style={{ color: 'oklch(0.40 0.01 17.53)', fontSize: 11 }}>{suffix}</div>
@@ -425,7 +425,7 @@ export default function PriceSyncPageV2() {
       {summary && summary.totalPotentialLoss > 0 && (
         <Alert type="warning" showIcon={false}
           style={{ borderRadius: 14, background: 'oklch(0.65 0.15 30 / 0.10)', borderColor: 'oklch(0.65 0.15 30 / 0.25)' }}
-          message={
+          title={
             <div className="flex items-center gap-3">
               <ExclamationCircleOutlined style={{ color: '#f87171', fontSize: 20 }} />
               <div>
@@ -533,7 +533,7 @@ export default function PriceSyncPageV2() {
           </Card>
 
           {/* Main table */}
-          <Card style={cs} bodyStyle={{ padding: 0 }}>
+          <Card style={cs} >
             <Table
               dataSource={filteredMatched}
               columns={matchedCols}
@@ -603,7 +603,7 @@ export default function PriceSyncPageV2() {
 
       {/* ── TAB: UNMATCHED ──────────────────────────────────────── */}
       {activeTab === 'unmatched' && (
-        <Card style={cs} bodyStyle={{ padding: 0 }}
+        <Card style={cs} 
           title={
             <div>
               <span style={{ color: 'white', fontWeight: 800 }}>⚠️ Voucher Tidak Match dengan Digiflazz</span>
@@ -627,7 +627,7 @@ export default function PriceSyncPageV2() {
 
       {/* ── TAB: DIGI ONLY ──────────────────────────────────────── */}
       {activeTab === 'digi_only' && (
-        <Card style={cs} bodyStyle={{ padding: 0 }}
+        <Card style={cs} 
           title={
             <div>
               <span style={{ color: 'white', fontWeight: 800 }}>📋 Produk Digiflazz yang Belum Ada di Website</span>
