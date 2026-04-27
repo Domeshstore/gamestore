@@ -32,6 +32,11 @@ const NAV_ITEMS = [
   { key: '/admin/price-sync',    icon: <SyncOutlined />,          label: 'Sinkron Harga' },
   { key: '/admin/flash-sale',    icon: <ThunderboltOutlined />,   label: 'Flash Sale' },
   { key: '/admin/settings',     icon: <SettingOutlined />,      label: 'Pengaturan' },
+  {
+  key: '/admin/treasure',
+  icon: <GiftOutlined />,
+  label: 'Harta Karun',
+}
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

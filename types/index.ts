@@ -135,3 +135,46 @@ export interface AdminStats {
   processing: number; successTransactions: number; failedTransactions: number;
   totalRevenue: number;
 }
+export type TreasureRarity = 'common' | 'rare' | 'epic' | 'legendary';
+
+export interface Treasure {
+  _id: string;
+  code: string;
+  name: string;
+  description: string;
+  coinsAmount: number;
+  totalUses: number;
+  usedCount: number;
+  expiresAt: string | null;
+  isActive: boolean;
+  rarity: TreasureRarity;
+  icon: string;
+  color: string;
+  gradient: string;
+  createdBy: { _id: string; name: string; email: string };
+  claimedBy: Array<{ userId: string; username: string; claimedAt: string }>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TreasureStats {
+  totalTreasures: number;
+  activeTreasures: number;
+  totalClaimed: number;
+  totalCoinsDistributed: number;
+  byRarity: Array<{ _id: TreasureRarity; count: number; totalUses: number }>;
+}
+
+export interface UserDeltaCoins {
+  deltaCoins: number;
+  totalEarned: number;
+  totalTreasuresOpened: number;
+  totalCoinsFromTreasures: number;
+  treasureHistory: Array<{
+    treasureId: Treasure;
+    treasureCode: string;
+    coinsAmount: number;
+    claimedAt: string;
+    rarity: TreasureRarity;
+  }>;
+}

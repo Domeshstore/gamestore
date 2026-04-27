@@ -218,6 +218,76 @@ export const newsAPI = {
   delete:   (id: string)                 => apiClient.delete(`/news/${id}`),
 };
 
+// lib/api/client.ts
+// Cari bagian treasureAPI atau tambahkan setelah rewardsAPI
+
+// ==================== TREASURE / DELTA COINS API ====================
+export const treasureAPI = {
+  // ========== USER ENDPOINTS ==========
+  // Redeem treasure code
+  redeem: (code: string) => apiClient.post('/treasure/redeem', { code }),
+  
+  // Get user's delta coins balance
+  getMyCoins: () => apiClient.get('/treasure/my-coins'),
+  
+  // Get user's treasure claim history
+  getHistory: (page?: number, limit?: number) => 
+    apiClient.get('/treasure/history', { params: { page, limit } }),
+  
+  // ========== ADMIN ENDPOINTS ==========
+  // Get all treasures (with pagination & filters)
+  getAdminList: (params?: { 
+    page?: number; 
+    limit?: number; 
+    rarity?: 'common' | 'rare' | 'epic' | 'legendary';
+    isActive?: boolean;
+  }) => apiClient.get('/treasure/admin/list', { params }),
+  
+  // Get statistics (total treasures, claims, coins distributed, etc.)
+  getAdminStats: () => apiClient.get('/treasure/admin/stats'),
+  
+  // Create new treasure
+  createAdminTreasure: (data: {
+    code?: string;              // Optional, auto-generate if empty
+    name: string;               // Required
+    description?: string;
+    coinsAmount: number;        // Required
+    totalUses?: number;         // Default: 1
+    expiresAt?: string | null;  // ISO date string or null
+    rarity?: 'common' | 'rare' | 'epic' | 'legendary';
+    icon?: string;              // Emoji, default: 🎁
+    color?: string;             // Hex color
+    gradient?: string;          // Tailwind gradient classes
+  }) => apiClient.post('/treasure/admin/create', data),
+  
+  // Update existing treasure
+  updateAdminTreasure: (id: string, data: Record<string, unknown>) => 
+    apiClient.put(`/treasure/admin/${id}`, data),
+  
+  // Delete treasure
+  deleteAdminTreasure: (id: string) => 
+    apiClient.delete(`/treasure/admin/${id}`),
+  
+  // Get single treasure by ID (optional, for detail view)
+  getAdminTreasureById: (id: string) => 
+    apiClient.get(`/treasure/admin/${id}`),
+  
+  // Bulk operations
+  bulkActivate: (ids: string[]) => 
+    apiClient.post('/treasure/admin/bulk/activate', { ids }),
+  
+  bulkDeactivate: (ids: string[]) => 
+    apiClient.post('/treasure/admin/bulk/deactivate', { ids }),
+  
+  bulkDelete: (ids: string[]) => 
+    apiClient.post('/treasure/admin/bulk/delete', { ids }),
+};
+
+// Debug helper (development only)
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  (window as any).__treasureAPI = treasureAPI;
+}
+
 export const reviewsPublicAPI = {
   get: () => apiClient.get('/transactions/public-reviews'),
 };
