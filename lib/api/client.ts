@@ -147,15 +147,19 @@ export const rewardsAPI = {
 // };
 
 export const digiflazzAPI = {
+  cekUsernameML: (userId: string, zoneId?: string) =>
+    apiClient.post('/digiflazz/cek-username-ml', { 
+      userId: userId.trim(), 
+      zoneId: zoneId?.trim() || '' 
+    }),
   getBalance:  () => apiClient.get('/digiflazz/balance'),
   getPriceList:(cmd?: string) => apiClient.get('/digiflazz/price-list', { params: { cmd } }),
   checkStatus: (refId: string) => apiClient.get('/digiflazz/status', { params: { ref_id: refId } }),
   createTransaction: (d: { refId: string; buyerSkuCode: string; customerId: string; testing?: boolean }) =>
     apiClient.post('/digiflazz/transaction', d),
   
-    // Tambahkan method check username
-  checkUsername: (gameCode: string, userId: string, serverId?: string) =>
-    apiClient.post('/digiflazz/check-username', { gameCode, userId, serverId }),
+    
+   
 };
 
 export const promoAPI = {
