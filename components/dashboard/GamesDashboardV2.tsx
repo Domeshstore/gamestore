@@ -62,7 +62,7 @@ export default function GameDetailPage() {
     if (!game || !userId) return;
     setChecking(true); setCheckedUsername(''); setCheckError('');
     try {
-      const res = await digiflazzAPI.checkUsername(game.gameCode, userId, serverId || undefined);
+      const res = await digiflazzAPI.cekUsernameML(game.gameCode, userId, serverId || undefined);
       const d = res.data.data;
       if (d?.username || d?.name) { setCheckedUsername(d.username || d.name); toast.success('Akun ditemukan!'); }
       else setCheckError('Akun tidak ditemukan');
